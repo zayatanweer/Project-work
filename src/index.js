@@ -8,13 +8,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
-mongoose.connect("", {
+mongoose.connect("mongodb+srv://rahul_8651080470:7tvW8IuaU608kdhl@cluster0.zmjtewh.mongodb.net/project2", {
     useNewUrlParser: true,
 })
 .then( () => console.log("MongoDb is successfully connected!"))
 .catch( err => console.log(err) )
 
-app.use('/', router);
+app.use('/', route);
 
 
 app.listen(process.env.PORT || 3000, function(){
