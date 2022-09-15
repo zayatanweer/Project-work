@@ -1,0 +1,120 @@
+// const isvalidRequest = function (requestBody) {
+//     return Object.keys(requestBody).length === 0
+//   }
+  
+ // if (!isvalidRequest(requestBody)) return res.status(400).send({ status: false, message: "invalid request parameter ,please provied intern detail" });
+
+// if (!name) return res.status(400).send({ status: false, message: "Name is required" });
+    // if (!isValid(name)) return res.status(400).send({ status: false, message: "Name is invalid" });
+    // if (!isValid(email)) return res.status(400).send({ status: false, message: "email is required" });
+    // if (!(/^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/.test(email))) return res.status(400).send({ status: false, message: "email Id is invalid" });
+
+    // let Email = await internModel.findOne({ email });
+    // if (Email) return res.status(404).send({ status: false, message: "email is already used" });
+    // if (!isValid(mobile)) return res.status(400).send({ status: false, message: "mobile is required" });
+    // if(!(/^[6-9]{1}[0-9]{9}$/im.test(mobile)))  return res.status(400).send({ status: false, message: "Mobile No is invalid. +91 is not required" });
+
+    // let checkMobile = await internModel.findOne({ mobile });
+    // if (checkMobile) return res.status(404).send({ status: false, message: "Mobile Number is already used" });
+    // if (!collegeName) return res.status(400).send({ status: false, message: "collegeName is required" });
+    // if (!isValid(collegeName)) return res.status(400).send({ status: false, message: "collegeName is invalid" });
+
+ 
+
+    // collegeDetails = async function (req, res){
+//     try {
+//     const data = req.query
+//     let saveData = await internModel.findOne(data);
+//     return res.status(200).send({ status :true, msg : "intern collegeDetails", data : saveData})
+//     }
+//     catch(err){
+//         return res.status(500).send({status: false, message: err.message })
+//     }
+// }
+
+
+
+// const internModel = require("../model/internModels")
+// const collegeModel = require("../model/collegeModels")
+
+
+// //---------------------------creating data for interns------------------//
+
+
+// const isValid = function (value) {
+//   if (typeof value === "undefined" || value === null) return false;
+//   if (typeof value === "string" && value.trim().length === 0) return false;
+//   return true;
+// };
+
+// const createIntern = async function (req, res) {
+//   try {
+//     const data = req.body;
+//     let { name, email, mobile, collegeName } = data
+//     if (Object.keys(data).length === 0){
+//       return res.status(400).send({ status : false, message: "Please give some data"})
+//     }
+//     let collegeDetails = await collegeModel.findOne({ name: data.collegeName })
+//     return res.send(collegeDetails);
+
+//     if(!isValid(data.name)){
+//       return res.status(400).send({ status : false, message: "name is missing or you left empty"})
+//     }
+//     data.collegeId = collegeDetails._id
+//     let saveData = await internModel.create(data)
+//     return res.status(201).send({ status: true, msg: "intern created successfully", data: saveData })
+//   } catch (err) {
+//     return res.status(500).send({status: false, message: err.message })
+//   }
+// }
+
+
+
+
+// const collegeDetails = async function (req, res) {
+//     try {
+  
+//       let data = req.query;
+//       if (Object.keys(data).length === 0) {
+//         return res.status(400).send({ status: false, message: "Please give some data" });
+//       }
+//       let filter = {isDeleted: false, ...data}
+//       const { collegeName } = data
+  
+//       if (collegeName) {
+//         let collegeNameDetails = await internModel.findOne({ collegeName: collegeName })
+//         if (!collegeNameDetails) {
+//           return res.status(400).send({ status: false, msg: 'No collegeNameDetails exist in this filled' })
+//         }
+//       }
+//       let details = await internModel.find(filter).populate("collegeId")
+//       if(!details){
+//         return res.status(404).send({ status: false, msg: 'not data found' })
+//       }
+//       return res.status(200).send({ status: true, msg:"successfully fetch data", data: details });
+//     } catch (err) {
+//       res.status(500).send({ status: false, data: err.message });
+//     }
+//   };
+
+
+// const collegeDetails = async function (req , res) {
+//   try {
+//   let data = req.query
+//   savedata= await internModel.find(data).populate("collegeId")
+//   return res.status(200).send({status:true,msg:"All details are present" , data: savedata})
+//   }
+//   catch(err){
+//     return res.status(500).send({ msg: "Error", error: err.message });
+//   }
+// }
+
+// const collegeDetails = async function (req , res) {
+  
+//   let {collegeName} = req.query
+//  let findCollegedata= await collegeModel.find({name:collegeName})
+//  res.send(findCollegedata)
+//  let findIntendata= await internModel.find({collegeId:findCollegedata})
+//  res.send({status:true, data:findIntendata})
+   
+//   }
