@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const collegeModel = require("../model/collegeModels");
 
 
-//--------------------------college-Post-api------------------//
+//--------------------------create college details------------------//
 
 
 const isValid = function (value){
