@@ -21,7 +21,7 @@ const validMob = function(mobile){
 
 const createIntern = async function (req, res) {
   try{
-    
+
   let data =req.body;
   let {name,email,mobile,collegeName,isDeleted} = data
   let college= data.collegeName
@@ -103,7 +103,7 @@ const collegeDetails = async function (req, res) {
         logoLink: collegeData.logoLink,  
         interns: details
   }
-  return res.status(201).send({ status: true, msg : "successfully fetch intern details" , data: collegeData})
+  return res.status(200).send({ status: true, msg : "successfully fetch intern details" , data: collegeData})
 } catch(err){
   return res.status(500).send({ msg: "Error", err: err.message });
 }
