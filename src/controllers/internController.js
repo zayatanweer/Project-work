@@ -13,14 +13,19 @@ const isValid = function (value) {
   if (typeof value === "string" && value.trim().length === 0) return false;
   return true;
 };
+const validMob = function(mobile){
+  if (mobile == 0000000000){
+    return true;
+  }
+}
 
 const createIntern = async function (req, res) {
   try{
-
+    
   let data =req.body;
   let {name,email,mobile,collegeName,isDeleted} = data
   let college= data.collegeName
-  let intern= await collegeModel.findOne({name:college})
+  let intern = await collegeModel.findOne({name:college})
 
   if (Object.keys(data).length === 0){
     return res.status(400).send({ status : false, message: "Please give some data"})
@@ -37,19 +42,25 @@ const createIntern = async function (req, res) {
   if (!validator.validate(email)) {
     return res.status(400).send({ status: false, message: "Please provide a valid email" });
   }
-  const dbemail = await internModel.findOne({ email: data.email });
+  const dbemail = await internModel.findOne({ email: email });
   if (dbemail) {
     return res.status(400).send({ status: false, message: "email is already used" });
   }
-  if(!isValid(data.mobile)){
+  if(!isValid(mobile)){
     return res.status(400).send({ status : false, message: "mobile is missing or you left empty"})
   }
-  const dbmobile = await internModel.findOne({ mobile: data.mobile });
+  const dbmobile = await internModel.findOne({ mobile: mobile });
   if (dbmobile) {
     return res.status(400).send({ status: false, message: "mobile no is already used" });
   }
   if (mobile.length < 10 || mobile.length >10) {
     return res.status(400).send({ status: false, msg: "Mobile no should be 10 digits" })
+  }
+  if (!/^[0-9]+$/.test(mobile)){
+    return res.status(400).send({ status: false, msg: "Mobile no accepted only digits" });
+  }
+  if (validMob(mobile)){
+    return res.status(400).send({ status: false, msg: "please provide valid Mobile no" });
   }
   if(!isValid(collegeName)){
     return res.status(400).send({ status : false, message: "collegeName is missing or you left empty"})
@@ -78,11 +89,11 @@ const collegeDetails = async function (req, res) {
   try{
   let {collegeName} = req.query
   if (!collegeName){
-    return res.status(400).send({ status : true, msg : "collegeName is missing or you left empty" })
+    return res.status(400).send({ status : false, msg : "collegeName is missing or you left empty" })
   }
   let collegeData= await collegeModel.findOne({name:collegeName})
   if (!collegeData){
-    return res.status(400).send({ status : true, msg : "collegeData you have provided is incorrect" })
+    return res.status(400).send({ status : false, msg : "collegeData you have provided is incorrect" })
   }
   let details = await internModel.find({ collegeId: collegeData._id }).select({ _id: 1, name: 1, email: 1, mobile: 1 })
 
@@ -92,7 +103,7 @@ const collegeDetails = async function (req, res) {
         logoLink: collegeData.logoLink,  
         interns: details
   }
-  return res.status(200).send({ status: true, msg : "successfully fetch intern details" , data: collegeData})
+  return res.status(201).send({ status: true, msg : "successfully fetch intern details" , data: collegeData})
 } catch(err){
   return res.status(500).send({ msg: "Error", err: err.message });
 }
