@@ -1,6 +1,6 @@
 const userModel=require('../Models/userModel')
 const jwt=require('jsonwebtoken')
-const {isValid,isVAlidRequestBody,nameRegex,phoneRegex,emailRegex,isValidPassword,}=require('../validators/validator')
+const {isValid,isVAlidRequestBody,nameRegex,phoneRegex,emailRegex,isValidPassword,validString}=require('../validators/validator')
 
 
 
@@ -16,7 +16,7 @@ const createUser = async function (req, res) {
         }
 
         // extract
-        const { title, name, phone, email, password} = data
+        const { title, name, phone, email, password,address} = data
 
         //validations
 
@@ -73,36 +73,20 @@ const createUser = async function (req, res) {
             return res.status(400).send({status: false, message: 'please provide Valid password with Min length 8 and Max length 15' })
     }
 
-    // if(data.address){
-    //     if(!isVAlidRequestBody(data.address)){
+        if(address){
+            if(typeof address!=='object') return res.status(400).send({status:false,message:"the address should be in object"})
 
-    //     if(data.address.street) {
-    //         if(!isValid(data.address.street)){
-    //         return res.status(400).send({ status: false, message: 'Street should be non empty String' })
-    //     } 
-    // }
-    //     console.log(data.address);
+            if(!validString(address.street)) return res.status(400).send({status:false,message:"Street should be non empty string"})
 
-    //     // if(address.city){
-    //     //     if(!isValid(address.city)){
-    //     //         return res.status(400).send({ status: false, message: 'city should be non empty String' })
-    //     //     } 
-    //     //     }
+            if(!validString(address.city)) return res.status(400).send({status:false,message:"city should be non empty string"})
+            
+            if(!validString(address.pincode)) return res.status(400).send({status:false,message:"pincode should be non empty string"})
 
-    //     // if(address.pincode){
-    //     //     if(!isValid(address.pincode)){
-    //     //         return res.status(400).send({ status: false, message: 'pincode should be non empty String' })
-    //     //     } 
-    //     //     }
-        
-    //     }else{
-    //         return res.status(400).send({ status: false, message: "The address can't be empty"})
-    //     }
-    //     }
+        }
     
 
         const newUser = await userModel.create(data)
-        return res.status(201).send({ status: true, message: 'File Created Succesfully', data: newUser })
+        return res.status(201).send({ status: true, message: 'Succes', data: newUser })
 
     }
     catch (err) {
@@ -117,7 +101,7 @@ const uesrLogin = async function (req, res){
     try {
         let data=req.body
         let{email,password}=data
-        
+
         if(!isVAlidRequestBody(data)) 
         return res.status(400).send({status:false,message:"the input is requried to Login"})
 
@@ -141,7 +125,7 @@ const uesrLogin = async function (req, res){
                 Batch: "Plutonium",
                 Project: "Group32",
             },
-            "secret-key-Group32",{expiresIn: '1h'}
+            "secret-key-Group32",{expiresIn: '10h'}
         );
         res.header('x-api-key', token)
 

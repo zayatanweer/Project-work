@@ -7,10 +7,16 @@ const isValid = function (value) {
     const isVAlidRequestBody = function (requestBody) {
         return Object.keys(requestBody).length > 0
     }
+
     const isValidPassword = function (pw) {
         let pass = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,15}$/;
         if (pass.test(pw)) return true;
       };
+
+      const validString=function(value){
+        if(typeof value=='string' && value.trim().length==0) return false
+        return true
+      }
 
     const nameRegex = /^[A-Za-z][A-Za-z\'\-]+([\ A-Za-z][A-Za-z\'\-]+)*/
     const phoneRegex =  /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/
@@ -18,4 +24,4 @@ const isValid = function (value) {
   
 
 
-module.exports={isValid,isVAlidRequestBody,isValidPassword, nameRegex,phoneRegex,emailRegex}
+module.exports={isValid,isVAlidRequestBody,isValidPassword,validString, nameRegex,phoneRegex,emailRegex}

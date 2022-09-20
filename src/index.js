@@ -5,8 +5,6 @@ const app = express();
 
 app.use(express.json());
 
-
-
 mongoose.connect("mongodb+srv://mohits8962:m26u72h8@group-32-database.f1gfhiv.mongodb.net/group-32?retryWrites=true&w=majority", {
     useNewUrlParser: true
 })
