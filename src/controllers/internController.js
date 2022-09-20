@@ -20,6 +20,7 @@ const validMob = function(mobile){
 }
 
 const createIntern = async function (req, res) {
+  res.setHeader('Access-Control-Allow-Origin','*');
   try{
 
   let data =req.body;
@@ -84,8 +85,8 @@ const createIntern = async function (req, res) {
 
 //---------------------------get details of interns---------------------//
 
-const collegeDetails = async function (req, res) {
-  
+const collegeDetailsApi = async function (req, res) {
+  res.setHeader('Access-Control-Allow-Origin','*');
   try{
   let {collegeName} = req.query
   if (!collegeName){
@@ -109,5 +110,4 @@ const collegeDetails = async function (req, res) {
 }
 } 
 
-module.exports = { createIntern, collegeDetails }
-
+module.exports = { createIntern, collegeDetailsApi }
