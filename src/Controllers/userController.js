@@ -1,5 +1,10 @@
 const userModel=require('../Models/userModel')
+const jwt=require('jsonwebtoken')
 const {isValid,isVAlidRequestBody,nameRegex,phoneRegex,emailRegex,isValidPassword,}=require('../validators/validator')
+
+
+
+//Create User================================================>
 const createUser = async function (req, res) {
  try {
 
@@ -105,4 +110,46 @@ const createUser = async function (req, res) {
     }
 };
 
-module.exports.createUser = createUser;
+
+
+//Login User===========================================>
+const uesrLogin = async function (req, res){
+    try {
+        let data=req.body
+        let{email,password}=data
+        
+        if(!isVAlidRequestBody(data)) 
+        return res.status(400).send({status:false,message:"the input is requried to Login"})
+
+        if (!isValid(email)) {
+            return res.status(400).send({ status: false, message: 'Email should be non empty string' })
+        }
+
+        if (!isValid(password)) {
+            return res.status(400).send({ status: false, message: 'password should be non empty string' })
+        }
+
+        let gettingDetails = await userModel.findOne({ email: email, password: password });
+        if (!gettingDetails) {
+            return res.status(401).send({ status: false, message: "Invalid Login Credentials" });
+        }
+
+        // token create :-
+        let token = await jwt.sign(
+            {
+                userId: gettingDetails._id,
+                Batch: "Plutonium",
+                Project: "Group32",
+            },
+            "secret-key-Group32",{expiresIn: '1h'}
+        );
+        res.header('x-api-key', token)
+
+        res.status(200).send({ status: true, message:'Success',data:token });
+    } catch (err) {
+        res.status(500).send({ status: false, error: err.message });
+    }
+};
+
+
+module.exports= {createUser,uesrLogin}
