@@ -12,8 +12,8 @@ const isValid = function (value) {
         if (pass.test(pw)) return true;
       };
 
-    const nameRegex = /^[a-z\s]+$/i
-    const phoneRegex = /^[0-9]{10}$/
+    const nameRegex = /^[A-Za-z][A-Za-z\'\-]+([\ A-Za-z][A-Za-z\'\-]+)*/
+    const phoneRegex =  /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/
     const emailRegex = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/
   
 
