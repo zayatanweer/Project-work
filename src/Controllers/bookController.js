@@ -14,6 +14,7 @@ const {
   isbnValid,
 } = require('../validators/validator');
 
+//create Book========================================================================>
 const createBook = async function (req, res) {
   try {
     data = req.body;
@@ -135,44 +136,66 @@ const createBook = async function (req, res) {
   }
 };
 
-//get by Query Params
+//get books by Query Params=============================================================>
 const getbooks = async function (req, res) {
   try {
     let data = req.query;
 
     const { userId, category, subcategory } = data;
 
+    if(Object.keys(data).length>3) return res.status(400).send({status:false,message:"the input should be only 3 query params"})
+
+    let filter={isDeleted:false}
+
+    if(userId) {
+    if(!objectIdValid(userId)) return res.status(400).send({staus:false,message:"Please give valid userId"})
+    filter.userId=userId
+    }
+
+    if(category) {
+    filter.category=category
+    }
+
+    if(subcategory) {
+    filter.subcategory=subcategory
+    }
+
+    let validUser=await bookModel.findOne(filter)
+
+    if(!validUser) return res.status(400).send({staus:false,message:"please provide valid input"})
+
+    let getOneUser=validUser.userId.toString()
+
     const decodedToken = req.decodedToken;
 
-    if (decodedToken !== userId)
+    if (decodedToken !== getOneUser)
       return res
         .status(403)
         .send({ status: false, message: 'You are not authorized' });
 
     let gettingData = await bookModel
-      .find({ $and: [{ isDeleted: false }, data] })
+      .find(filter)
       .select({
-        _id: 1,
         title: 1,
         excerpt: 1,
         userId: 1,
         category: 1,
         releasedAt: 1,
-        reviews: 1,
-        subcategory: 1,
+        reviews: 1
       })
-      .sort({ title: 1 });
-
+      .sort({ title: 1 })
+  
     if (gettingData.length == 0) {
       return res
         .status(404)
-        .send({ status: false, msg: 'OOPS!! Document is Deleted' });
+        .send({ status: false,message:"No documents found"});
     }
     return res
       .status(200)
       .send({
         status: true,
-        msg: 'Data fetch successfully',
+        msg: 'Books list',
+        BooksCount:gettingData.length,
         data: gettingData,
       });
   } catch (err) {
@@ -180,52 +203,41 @@ const getbooks = async function (req, res) {
   }
 };
 
-//get books by path
+
+//get books by path params========================================================>
 const getBookByParams = async function (req, res) {
   try {
    let data = req.params.bookId;
-   const decodedToken = req.decodedToken;
-    const getUserId=await bookModel.findOne({data}).select({userId:1,_id:0})
 
-    const oneUserId=getUserId.userId.toString()
-    
-   if (decodedToken !== oneUserId)
-     return res
-       .status(403)
-       .send({ status: false, message: 'You are not authorized' });
-       
+   const decodedToken = req.decodedToken;
+
    if(!objectIdValid(data)) return res.status(400).send({staus:false,message:"Please give valid BookId"})
 
-    let books = await bookModel.findById(data);
-    if (!books) {
-      return res.status(404).send("books doesn't exists");
-    }
-    if (books.isDeleted == true) {
-      return res.status(404).send('This books is deleted');
-    }
+    const getUserId=await bookModel.findOne({_id:data}).select({userId:1,_id:0})
+ 
+    const oneUserId=getUserId.userId.toString()
+   
+    if (decodedToken !== oneUserId)
+     return res.status(403).send({ status: false, message: 'You are not authorized' });
 
-    let getBookData = await bookModel.findById({_id:data,isDeleted:false});
+    let getBookData = await bookModel.findById({_id:data});
 
-    if (!getBookData) {
-      return res.status(404).send({ status: false, msg: 'no data found' });
-    }
+    if (!getBookData) return res.status(404).send({ status: false, message: 'No Book found' });
+
+    if (getBookData.isDeleted == true) return res.status(400).send({staus:false,message:'This book is deleted'});
+
+    let {_id,title,excerpt,userId,category,subcategory,isDeleted,reviews,releasedAt,createdAt,updatedAt} = getBookData
+
     const getReview = await reviewModel.find({ bookId: data });
 
-    let getdata = {
-      _id: getBookData._id,
-      title: getBookData.title,
-      excerpt: getBookData.excerpt,
-      userId: getBookData.userId,
-      category: getBookData.category,
-      subcategory: getBookData.subcategory,
-      isDeleted: getBookData.isDeleted,
-      reviweData: getReview,
-    };
+    let getBookData1={_id,title,excerpt,userId,category,subcategory,isDeleted,reviews,releasedAt,createdAt,updatedAt,reviewsData:getReview}
+
     return res.status(200).send({
         status: true,
-        data: getdata,
-        msg: 'succesfully get book details',
-      });
+        message: 'Books list',
+        data:getBookData1,
+       });
+
   } catch (err) {
     res.status(500).send({ status: false, message: err.message });
   }
