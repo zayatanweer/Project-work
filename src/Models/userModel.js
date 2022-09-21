@@ -28,13 +28,13 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-        trim: true,
+        trim: true
     },
     address: {
         street: { type: String, trim: true},
         city: { type: String, trim: true },
         pincode: { type: String, trim: true }
-    },
+    }
 }, { timestamps: true })
 
 module.exports = mongoose.model('user', userSchema)

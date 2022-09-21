@@ -1,3 +1,5 @@
+const mongoose=require('mongoose')
+
 const isValid = function (value) {
     if (typeof value === 'undefined' || value === null) return false
     if (typeof value === 'string' && value.trim().length === 0) return false
@@ -18,10 +20,19 @@ const isValid = function (value) {
         return true
       }
 
+    const objectIdValid = function (value) {
+      return mongoose.Types.ObjectId.isValid(value);
+      };
+
+
     const nameRegex = /^[A-Za-z][A-Za-z\'\-]+([\ A-Za-z][A-Za-z\'\-]+)*/
     const phoneRegex =  /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/
     const emailRegex = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/
-  
+    const dateFormate = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
+    const pincodeValid=/^(\d{4}|\d{6})$/
+    const isbnValid=	/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/
+ 
 
 
-module.exports={isValid,isVAlidRequestBody,isValidPassword,validString, nameRegex,phoneRegex,emailRegex}
+
+module.exports={isValid,isVAlidRequestBody,isValidPassword,validString,objectIdValid, nameRegex,phoneRegex,emailRegex,dateFormate,pincodeValid,isbnValid}
