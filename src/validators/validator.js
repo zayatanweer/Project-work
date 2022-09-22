@@ -16,7 +16,7 @@ const isValid = function (value) {
       };
 
       const validString=function(value){
-        if(typeof value=='string' && value.trim().length==0) return false
+        if(typeof value==='string' && value.trim().length===0) return false
         return true
       }
 
@@ -31,7 +31,6 @@ const isValid = function (value) {
     const dateFormate = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
     const pincodeValid=/^(\d{4}|\d{6})$/
     const isbnValid=	/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/
- 
 
 
 

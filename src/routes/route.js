@@ -15,6 +15,10 @@ router.get("/books",mid1.authentication, bookController.getbooks)
 
 router.get("/books/:bookId",mid1.authentication,bookController.getBookByParams)
 
+router.put("/books/:bookId",mid1.authentication,bookController.updateBook)
+
+router.delete("/books/:bookId",mid1.authentication,bookController.deleteBook)
+
 
 //for worng route=============================>
 router.all('/*/',async function(req,res){

@@ -11,7 +11,7 @@ const {
   phoneRegex,
   emailRegex,
   dateFormate,
-  isbnValid,
+  isbnValid
 } = require('../validators/validator');
 
 //create Book========================================================================>
@@ -148,17 +148,14 @@ const getbooks = async function (req, res) {
 
     if(userId) {
     if(!objectIdValid(userId)) return res.status(400).send({staus:false,message:"Please give valid userId"})
-    if(typeof userId=='undefined'|| userId.trim().length==0) return res.status(404).send({ status: false, msg: "please give value for the userId" })
     filter.userId=userId
     }
 
     if(category) {
-      if(typeof category=='undefined'|| category.trim().length==0) return res.status(404).send({ status: false, msg: "please give value for the category" })
     filter.category=category
     }
 
     if(subcategory) {
-      if(typeof subcategory=='undefined'|| subcategory.trim().length==0) return res.status(404).send({ status: false, msg: "please give value for the subcategory" })
     filter.subcategory=subcategory
     }
 
@@ -233,34 +230,36 @@ const updateBook=async function(req,res){
     
     let bookId = req.params.bookId;
 
+    if(!objectIdValid(bookId)) return res.status(400).send({staus:false,message:"the BookId should be in 24 character"})
+
+    let getBookData = await bookModel.findById({_id:bookId});
+
+    if (!getBookData) return res.status(404).send({ status: false, message: 'No Book found' });
+
+    if(getBookData.isDeleted==true) return res.status(404).send({ status: false, message: 'The Book is already deleted' });
+
     const decodedToken = req.decodedToken;
- 
-    if(!objectIdValid(bookId)) return res.status(400).send({staus:false,message:"Please give valid BookId"})
- 
-     const getUserId=await bookModel.findOne({_id:bookId}).select({userId:1,_id:0})
+  
+    const getUserId=await bookModel.findOne({_id:bookId}).select({userId:1,_id:0})
   
      const oneUserId=getUserId.userId.toString()
     
      if (decodedToken !== oneUserId)
       return res.status(403).send({ status: false, message: 'You are not authorized so You can not update the book' });
  
-     let getBookData = await bookModel.findById({_id:bookId});
- 
-     if (!getBookData) return res.status(404).send({ status: false, message: 'No Book found' });
- 
-     if (getBookData.isDeleted == true) return res.status(400).send({staus:false,message:'This book is deleted'});
+      let data = req.body
 
-     let data = req.body
      let {title,excerpt,ISBN,releasedAt}=data
 
      if (!isVAlidRequestBody(data))return res.status(400).send({status: false,message: 'Please provide the input to Update the Books'});
      
+     if(title){
      if (!isValid(title))
       return res
         .status(400)
         .send({
           status: false,
-          message: 'title is mandatory and should have non empty String',
+          message: 'title should have non empty String',
         });
 
     if (await bookModel.findOne({ title }))
@@ -270,21 +269,25 @@ const updateBook=async function(req,res){
           status: false,
           message: 'With this title the book is already present, Please provide unique title to update',
         });
+      }
 
-    if (!isValid(excerpt))
+      if(excerpt){
+    if (!validString(excerpt))
       return res
         .status(400)
         .send({
           status: false,
-          message: 'excerpt is mandatory and should have non empty String',
+          message: 'excerpt should have non empty String',
         });
+      }
 
-    if (!isValid(ISBN))
+      if(ISBN){
+    if (!validString(ISBN))
       return res
         .status(400)
         .send({
           status: false,
-          message: 'ISBN is mandatory and should have non empty String',
+          message: 'ISBN should have non empty String',
         });
 
     if (!isbnValid.test(ISBN))
@@ -297,9 +300,25 @@ const updateBook=async function(req,res){
         .status(400)
         .send({
           status: false,
-          message: 'ISBN is Already created Please give Another ISBN',
+          message: 'With this ISBN the book is already present, Please provide unique ISBN to update',
         });
+      }
 
+      if(releasedAt) {
+      if (!dateFormate.test(releasedAt))
+        return res
+          .status(400)
+          .send({
+            status: false,
+            message:
+              'releasedAt should be in this formate YYYY-MM-DD && it should be valid',
+          }); 
+        }
+      
+          const updateBook=await bookModel.findOneAndUpdate({_id:bookId}, {$set:{title: title, excerpt: excerpt, releasedAt: releasedAt, ISBN: ISBN }},{new:true})
+          
+          return res.status(200).send({staus:true,message:"Success",data:updateBook})
+    
   } catch (err) {
     res.status(500).send({ status: false, message: err.message });
   }
@@ -309,16 +328,30 @@ const updateBook=async function(req,res){
 const deleteBook = async function (req,res){
   try {
     let bookId = req.params.bookId;
+
     let book = await bookModel.findById(bookId);
 
     if(!book){
-      return res.status(404).send("This book is doesn't exist");
+      return res.status(404).send({staus:false,message:"This book is doesn't exist"});
     }
+
+    const decodedToken = req.decodedToken;
+  
+    if(!objectIdValid(bookId)) return res.status(400).send({staus:false,message:"the BookId should be in 24 character"})
+ 
+     const getUserId=await bookModel.findOne({_id:bookId}).select({userId:1,_id:0})
+  
+     const oneUserId=getUserId.userId.toString()
+    
+     if (decodedToken !== oneUserId)
+      return res.status(403).send({ status: false, message: 'You are not authorized so You can not delete the book' });
+
+   
     if (book.isDeleted == true) {
-      return res.status(404).send("This book is deleted");
+      return res.status(404).send({staus:false,message:"This book is deleted"});
     } else {
       let deleteBook = await bookModel.findOneAndUpdate({ _id: bookId },{ isDeleted: true, deletedAt: new Date() },{ new: true });
-      return res.status(200).send({status: true, msg: "book is deleted successfully", data: deleteBook,});
+      return res.status(200).send({status: true,message: "book is deleted successfully"});
     }
   } catch (err) {
     return res.status(500).send({ msg: err.message });
@@ -326,4 +359,4 @@ const deleteBook = async function (req,res){
 };
 
 
-module.exports = { createBook, getbooks, getBookByParams };
+module.exports = { createBook, getbooks, getBookByParams,updateBook,deleteBook };
