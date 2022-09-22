@@ -15,4 +15,10 @@ router.get("/books",mid1.authentication, bookController.getbooks)
 
 router.get("/books/:bookId",mid1.authentication,bookController.getBookByParams)
 
+
+//for worng route=============================>
+router.all('/*/',async function(req,res){
+    return res.status(404).send({status:false,message:"Page Not Found"})
+})
+
 module.exports = router

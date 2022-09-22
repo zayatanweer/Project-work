@@ -11,23 +11,22 @@ const authentication = function (req, res, next) {
           .status(401)
           .send({ status: false, message: "token must be present" });
   
-      decodedToken = jwt.verify(token,"secret-key-Group32",function (err, decodedToken) {
-          if (err){  
-            return res.status(401).send({ status: false, message: "token is invalid" });
+        jwt.verify(token,"secret-key-Group32",function (err,decode) {
+            if (err){  
+              return res.status(401).send({ status: false, message: "token is invalid" });
+            }
+            if(Date.now()>decode.exp*1000) {
+              return res.status(400).send({status:false,message:"Token expired"})
+            }
+            req['decodedToken']=decode.userId
+            next()
           }
-          if (Date.now() > decodedToken.exp * 1000) { 
-            return res.status(401).send({ status: false, message: "Token expired" }); //checking if the token is expired
-          }
-          req['decodedToken']=decodedToken.userId
-  
-          next();
-        }
       );
     } catch (error) {
       res.status(500).send({ status: false, Error: error.message });
     }
   };
-  
+   
   
 
 // const authorisation = async function(req,res,next){

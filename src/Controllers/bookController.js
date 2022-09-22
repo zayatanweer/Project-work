@@ -19,8 +19,7 @@ const createBook = async function (req, res) {
   try {
     data = req.body;
 
-    const { title, excerpt, userId, ISBN, category, subcategory, releasedAt } =
-      data;
+    const { title, excerpt, userId, ISBN, category, subcategory, releasedAt } = data;
 
     const decodedToken = req.decodedToken;
 
@@ -242,5 +241,85 @@ const getBookByParams = async function (req, res) {
     res.status(500).send({ status: false, message: err.message });
   }
 };
+
+
+//update Books================================================================>
+
+const updateBook=async function(req,res){
+  try {
+    
+    let bookId = req.params.bookId;
+
+    const decodedToken = req.decodedToken;
+ 
+    if(!objectIdValid(bookId)) return res.status(400).send({staus:false,message:"Please give valid BookId"})
+ 
+     const getUserId=await bookModel.findOne({_id:bookId}).select({userId:1,_id:0})
+  
+     const oneUserId=getUserId.userId.toString()
+    
+     if (decodedToken !== oneUserId)
+      return res.status(403).send({ status: false, message: 'You are not authorized so You can not update the book' });
+ 
+     let getBookData = await bookModel.findById({_id:bookId});
+ 
+     if (!getBookData) return res.status(404).send({ status: false, message: 'No Book found' });
+ 
+     if (getBookData.isDeleted == true) return res.status(400).send({staus:false,message:'This book is deleted'});
+
+     let data = req.body
+     let {title,excerpt,ISBN,releasedAt}=data
+
+     if (!isVAlidRequestBody(data))return res.status(400).send({status: false,message: 'Please provide the input to Update the Books'});
+     
+     if (!isValid(title))
+      return res
+        .status(400)
+        .send({
+          status: false,
+          message: 'title is mandatory and should have non empty String',
+        });
+
+    if (await bookModel.findOne({ title }))
+      return res
+        .status(400)
+        .send({
+          status: false,
+          message: 'With this title the book is already present, Please provide unique title to update',
+        });
+
+    if (!isValid(excerpt))
+      return res
+        .status(400)
+        .send({
+          status: false,
+          message: 'excerpt is mandatory and should have non empty String',
+        });
+
+    if (!isValid(ISBN))
+      return res
+        .status(400)
+        .send({
+          status: false,
+          message: 'ISBN is mandatory and should have non empty String',
+        });
+
+    if (!isbnValid.test(ISBN))
+      return res
+        .status(400)
+        .send({ status: false, message: 'ISBN Should be 10 || 13 digits' });
+
+    if (await bookModel.findOne({ ISBN }))
+      return res
+        .status(400)
+        .send({
+          status: false,
+          message: 'ISBN is Already created Please give Another ISBN',
+        });
+
+  } catch (err) {
+    res.status(500).send({ status: false, message: err.message });
+  }
+}
 
 module.exports = { createBook, getbooks, getBookByParams };

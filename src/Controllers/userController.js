@@ -124,8 +124,8 @@ const uesrLogin = async function (req, res){
                 Batch: "Plutonium",
                 Project: "Group32",
             },
-            "secret-key-Group32",{expiresIn:'10h'}
-        );
+            "secret-key-Group32",{expiresIn:'5h'}
+        ); 
         res.header('x-api-key', token)
 
         res.status(200).send({ status: true, message:'Success',data:token });
