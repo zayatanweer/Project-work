@@ -148,29 +148,20 @@ const getbooks = async function (req, res) {
 
     if(userId) {
     if(!objectIdValid(userId)) return res.status(400).send({staus:false,message:"Please give valid userId"})
+    if(typeof userId=='undefined'|| userId.trim().length==0) return res.status(404).send({ status: false, msg: "please give value for the userId" })
     filter.userId=userId
     }
 
     if(category) {
+      if(typeof category=='undefined'|| category.trim().length==0) return res.status(404).send({ status: false, msg: "please give value for the category" })
     filter.category=category
     }
 
     if(subcategory) {
+      if(typeof subcategory=='undefined'|| subcategory.trim().length==0) return res.status(404).send({ status: false, msg: "please give value for the subcategory" })
     filter.subcategory=subcategory
     }
 
-    let validUser=await bookModel.findOne(filter)
-
-    if(!validUser) return res.status(400).send({staus:false,message:"please provide valid input"})
-
-    let getOneUser=validUser.userId.toString()
-
-    const decodedToken = req.decodedToken;
-
-    if (decodedToken !== getOneUser)
-      return res
-        .status(403)
-        .send({ status: false, message: 'You are not authorized' });
 
     let gettingData = await bookModel
       .find(filter)
@@ -197,6 +188,7 @@ const getbooks = async function (req, res) {
         BooksCount:gettingData.length,
         data: gettingData,
       });
+   
   } catch (err) {
     return res.status(500).send({ staus: false, error: err.message });
   }
@@ -208,16 +200,7 @@ const getBookByParams = async function (req, res) {
   try {
    let data = req.params.bookId;
 
-   const decodedToken = req.decodedToken;
-
    if(!objectIdValid(data)) return res.status(400).send({staus:false,message:"Please give valid BookId"})
-
-    const getUserId=await bookModel.findOne({_id:data}).select({userId:1,_id:0})
- 
-    const oneUserId=getUserId.userId.toString()
-   
-    if (decodedToken !== oneUserId)
-     return res.status(403).send({ status: false, message: 'You are not authorized' });
 
     let getBookData = await bookModel.findById({_id:data});
 
@@ -321,5 +304,26 @@ const updateBook=async function(req,res){
     res.status(500).send({ status: false, message: err.message });
   }
 }
+
+
+const deleteBook = async function (req,res){
+  try {
+    let bookId = req.params.bookId;
+    let book = await bookModel.findById(bookId);
+
+    if(!book){
+      return res.status(404).send("This book is doesn't exist");
+    }
+    if (book.isDeleted == true) {
+      return res.status(404).send("This book is deleted");
+    } else {
+      let deleteBook = await bookModel.findOneAndUpdate({ _id: bookId },{ isDeleted: true, deletedAt: new Date() },{ new: true });
+      return res.status(200).send({status: true, msg: "book is deleted successfully", data: deleteBook,});
+    }
+  } catch (err) {
+    return res.status(500).send({ msg: err.message });
+  }
+};
+
 
 module.exports = { createBook, getbooks, getBookByParams };
