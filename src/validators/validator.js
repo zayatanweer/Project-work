@@ -24,6 +24,9 @@ const isValid = function (value) {
       return mongoose.Types.ObjectId.isValid(value);
       };
 
+      let regexSpaceChar = function (attribute) {
+        return (/^[A-Za-z\s]{1,}[\,]{0,1}[A-Za-z\s]{0,}$/.test(attribute))
+        }
 
     const nameRegex = /^[A-Za-z][A-Za-z\'\-]+([\ A-Za-z][A-Za-z\'\-]+)*/
     const phoneRegex =  /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/
@@ -33,4 +36,4 @@ const isValid = function (value) {
     const isbnValid=	/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/
 
     const ratingRegex= /^(\d*\.)?\d+$/
-module.exports={isValid,isVAlidRequestBody,isValidPassword,validString,objectIdValid, nameRegex,phoneRegex,emailRegex,dateFormate,pincodeValid,isbnValid,ratingRegex}
+module.exports={isValid,isVAlidRequestBody,isValidPassword,validString,objectIdValid,regexSpaceChar, nameRegex,phoneRegex,emailRegex,dateFormate,pincodeValid,isbnValid,ratingRegex}

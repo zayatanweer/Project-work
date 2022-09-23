@@ -7,6 +7,7 @@ const {
   isValidPassword,
   validString,
   objectIdValid,
+  regexSpaceChar,
   nameRegex,
   phoneRegex,
   emailRegex,
@@ -251,17 +252,33 @@ const updateBook=async function(req,res){
 
      let {title,excerpt,ISBN,releasedAt}=data
 
-     if (!isVAlidRequestBody(data))return res.status(400).send({status: false,message: 'Please provide the input to Update the Books'});
+     if (!isVAlidRequestBody(data)) return res.status(400).send({status: false,message: 'Please provide the input to Update the Books'});
      
-     if(title){
+    // if(title){
 
-      if (!validString(title))
-      return res
+    // if(title.length==""||title.trim().length==0) {
+    //   return res
+    //     .status(400)
+    //     .send({
+    //       status: false,
+    //       message: 'title is empty',
+    //     });
+    // }
+
+    if(!regexSpaceChar(title)) return res
         .status(400)
-        .send({
+          .send({
           status: false,
-          message: 'title should have non empty String',
+          message: 'title is empty',
         });
+
+      // if (!isValid(title))
+      // return res
+      //   .status(400)
+      //   .send({
+      //     status: false,
+      //     message: 'title should have non empty String',
+      //   });
 
     if (await bookModel.findOne({ title }))
       return res
@@ -270,7 +287,8 @@ const updateBook=async function(req,res){
           status: false,
           message: 'With this title the book is already present, Please provide unique title to update',
         });
-      }
+
+      // }
 
       if(excerpt){
     if (!validString(excerpt))
