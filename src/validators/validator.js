@@ -19,7 +19,7 @@ const isValid = function (value) {
         if(typeof value==='string' && value.trim().length===0) return false
         return true
       }
-
+      
     const objectIdValid = function (value) {
       return mongoose.Types.ObjectId.isValid(value);
       };
@@ -32,6 +32,5 @@ const isValid = function (value) {
     const pincodeValid=/^(\d{4}|\d{6})$/
     const isbnValid=	/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/
 
-
-
-module.exports={isValid,isVAlidRequestBody,isValidPassword,validString,objectIdValid, nameRegex,phoneRegex,emailRegex,dateFormate,pincodeValid,isbnValid}
+    const ratingRegex= /^(\d*\.)?\d+$/
+module.exports={isValid,isVAlidRequestBody,isValidPassword,validString,objectIdValid, nameRegex,phoneRegex,emailRegex,dateFormate,pincodeValid,isbnValid,ratingRegex}

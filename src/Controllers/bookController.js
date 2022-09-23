@@ -254,7 +254,10 @@ const updateBook=async function(req,res){
      if (!isVAlidRequestBody(data))return res.status(400).send({status: false,message: 'Please provide the input to Update the Books'});
      
      if(title){
-     if (!isValid(title))
+
+      //  if(title.trim()=="") return res.status(400).send({status: false,message: 'title is empty'});
+
+      if (!validString(title))
       return res
         .status(400)
         .send({
@@ -305,6 +308,7 @@ const updateBook=async function(req,res){
       }
 
       if(releasedAt) {
+
       if (!dateFormate.test(releasedAt))
         return res
           .status(400)
@@ -323,8 +327,8 @@ const updateBook=async function(req,res){
     res.status(500).send({ status: false, message: err.message });
   }
 }
-
-
+ 
+ 
 const deleteBook = async function (req,res){
   try {
     let bookId = req.params.bookId;
