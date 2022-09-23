@@ -25,6 +25,10 @@ router.delete("/books/:bookId",mid1.authentication,bookController.deleteBook)
 //Reviews API
 router.post('/books/:bookId/review',reviewController.createReview)
 
+router.put('/books/:bookId/review/:reviewId',reviewController.updateReview)
+
+router.delete("/books/:bookId/review/:reviewId",reviewController.deleteReview)
+
 //for worng route=============================>
 router.all('/*/',async function(req,res){
     return res.status(404).send({status:false,message:"Page Not Found"})

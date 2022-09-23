@@ -207,7 +207,7 @@ const getBookByParams = async function (req, res) {
 
     let {_id,title,excerpt,userId,category,subcategory,isDeleted,reviews,releasedAt,createdAt,updatedAt} = getBookData
 
-    const getReview = await reviewModel.find({ bookId: data });
+    const getReview = await reviewModel.find({ bookId: data , isDeleted:false});
 
     let getBookData1={_id,title,excerpt,userId,category,subcategory,isDeleted,reviews,releasedAt,createdAt,updatedAt,reviewsData:getReview}
 
@@ -254,8 +254,6 @@ const updateBook=async function(req,res){
      if (!isVAlidRequestBody(data))return res.status(400).send({status: false,message: 'Please provide the input to Update the Books'});
      
      if(title){
-
-      //  if(title.trim()=="") return res.status(400).send({status: false,message: 'title is empty'});
 
       if (!validString(title))
       return res
