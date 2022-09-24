@@ -4,7 +4,7 @@ const {isValid,isVAlidRequestBody,nameRegex,phoneRegex,emailRegex,isValidPasswor
 
 
 
-//Create User================================================>
+//<=======================================Create User================================================>
 const createUser = async function (req, res) {
  try {
         const data = req.body
@@ -13,7 +13,6 @@ const createUser = async function (req, res) {
             return res.status(400).send({ status: false, message: "Please give the Input to Create the User" })
         }
 
-        // extract
         const { title, name, phone, email, password,address} = data
 
         //validations
@@ -95,7 +94,7 @@ const createUser = async function (req, res) {
 
 
 
-//Login User===========================================>
+//<=======================================Login User===========================================>
 const uesrLogin = async function (req, res){
     try {
         let data=req.body
@@ -117,14 +116,14 @@ const uesrLogin = async function (req, res){
             return res.status(401).send({ status: false, message: "Invalid Login Credentials" });
         }
 
-        // token create :-
+        // token creation
         let token = await jwt.sign(
             {
                 userId: gettingDetails._id,
                 Batch: "Plutonium",
                 Project: "Group32",
             },
-            "secret-key-Group32",{expiresIn:'1s'}
+            "secret-key-Group32",{expiresIn:'25h'}
         ); 
         res.header('x-api-key', token)
 

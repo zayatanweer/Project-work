@@ -1,6 +1,4 @@
 const jwt = require("jsonwebtoken")
-const bookModel = require("../Models/bookModel")
-const{objectIdValid }=require('../validators/validator')
 
 const authentication = function (req, res, next) {
     try {
@@ -12,6 +10,7 @@ const authentication = function (req, res, next) {
   
         const decodedToken=jwt.verify(token,"secret-key-Group32")
 
+        //sending decodedToken in req
             req['decodedToken']=decodedToken.userId
             
             next()
@@ -22,7 +21,7 @@ const authentication = function (req, res, next) {
       }
    
         if(error.message=="jwt expired"){
-        return res.status(400).send({status:false,message:"Login once again"})
+        return res.status(400).send({status:false,message:"Please Login once again, the token has expired"})
       }
 
         if(error.message=="invalid signature"){

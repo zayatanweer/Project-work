@@ -4,19 +4,13 @@ const bookModel = require('../Models/bookModel');
 const {
     isValid,
     isVAlidRequestBody,
-    isValidPassword,
-    validString,
     objectIdValid,
     nameRegex,
-    ratingRegex,
-    phoneRegex,
-    emailRegex,
-    dateFormate,
-    isbnValid
+    ratingRegex
   } = require('../validators/validator');
 
 
-
+//<=======================================Crete Review======================================================================>
 const createReview = async function (req, res) {
     try {
         let data = req.params.bookId;
@@ -32,6 +26,8 @@ const createReview = async function (req, res) {
             return res.status(400).send({ status: false, message: "Please give the Input to Create the User" })
         }
 
+        if(Object.keys(bodyData).length>3) return res.status(400).send({ status: false, message: "Please give only 3 inputs to create review" })
+
         let getBookData = await bookModel.findById({ _id: data });
 
         if (!getBookData) return res.status(404).send({ status: false, message: 'No Book found' });
@@ -43,7 +39,7 @@ const createReview = async function (req, res) {
             return res.status(400).send({ status: false, message: 'rating is mandatory and should have non empty String' })
         }
 
-        if(!(rating>=1 && rating <=5)) return res.status(400).send({ status: false, message: 'rating must be in 1 to 5 only' })
+        if(!ratingRegex.test(rating)) return res.status(400).send({ status: false, message: 'Rating must be in 1 to 5 only and it should not contain floating point' })
 
         if (!isValid(reviewedBy)) {
             return res.status(400).send({ status: false, message: 'reviewedBy is mandatory and should have non empty String' })
@@ -75,7 +71,7 @@ const createReview = async function (req, res) {
     }
 };
 
-
+//<=======================================Update Review======================================================================>
 const updateReview = async function(req,res){
     try{
 
@@ -100,7 +96,9 @@ const updateReview = async function(req,res){
         if(reviewExist.isDeleted == true) return res.status(400).send({status: false, message: "the review is already deleted"})
 
         let data = req.body
-        if(!isVAlidRequestBody(data))return res.status(400).send({status:false, message:"plz enter some input in req.body it is mendatory"})
+        if(!isVAlidRequestBody(data))return res.status(400).send({status:false, message:"plz enter some input to upadate the review"})
+
+        if(Object.keys(data).length>3) return res.status(400).send({ status: false, message: "Please give only 3 inputs to update review" })
 
         let {review, rating, reviewedBy} = data
 
@@ -108,7 +106,7 @@ const updateReview = async function(req,res){
             return res.status(400).send({ status: false, message: 'rating is mandatory and should have non empty String' })
         }
 
-        if(!(rating>=1 && rating <=5)) return res.status(400).send({ status: false, message: 'rating must be in 1 to 5 only' })
+        if(!ratingRegex.test(rating)) return res.status(400).send({ status: false, message: 'Rating must be in 1 to 5 only and it should not contain floating point' })
 
         if (!isValid(reviewedBy)) {
             return res.status(400).send({ status: false, message: 'reviewedBy is mandatory and should have non empty String' })
@@ -129,6 +127,8 @@ const updateReview = async function(req,res){
     }
 }
 
+
+//<=======================================Delete Review======================================================================>
 const deleteReview = async function (req, res) {
     try {
         let bookId = req.params.bookId
@@ -152,7 +152,9 @@ const deleteReview = async function (req, res) {
         if(reviewExist.isDeleted == true) return res.status(400).send({status: false, message: "the review is already deleted"})
        
           let deleteReview = await reviewModel.findOneAndUpdate({ _id: reviewId, bookId: bookId },{ isDeleted: true, deletedAt: new Date() },{ new: true });
-          
+
+          const bookupdate=await bookModel.findOneAndUpdate({_id:bookId} ,{$inc:{reviews:-1}},{new:true})
+
           return res.status(200).send({status: true,message: "review is deleted successfully"});
 
       } catch (err) {

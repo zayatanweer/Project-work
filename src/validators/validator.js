@@ -29,11 +29,19 @@ const isValid = function (value) {
         }
 
     const nameRegex = /^[A-Za-z][A-Za-z\'\-]+([\ A-Za-z][A-Za-z\'\-]+)*/
+    
     const phoneRegex =  /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/
+
     const emailRegex = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/
+
     const dateFormate = /([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))/
+
     const pincodeValid=/^(\d{4}|\d{6})$/
+
     const isbnValid=	/^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/
 
-    const ratingRegex= /^(\d*\.)?\d+$/
-module.exports={isValid,isVAlidRequestBody,isValidPassword,validString,objectIdValid,regexSpaceChar, nameRegex,phoneRegex,emailRegex,dateFormate,pincodeValid,isbnValid,ratingRegex}
+    const ratingRegex= /^([1-5])$/
+
+    const titleRegex=/^[A-Za-z\s?]+$/
+
+module.exports={isValid,isVAlidRequestBody,isValidPassword,validString,objectIdValid,regexSpaceChar, nameRegex,phoneRegex,emailRegex,dateFormate,pincodeValid,isbnValid,ratingRegex,titleRegex}
