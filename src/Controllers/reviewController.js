@@ -41,11 +41,7 @@ const createReview = async function (req, res) {
 
         if(!ratingRegex.test(rating)) return res.status(400).send({ status: false, message: 'Rating must be in 1 to 5 only and it should not contain floating point' })
 
-        if (!isValid(reviewedBy)) {
-            return res.status(400).send({ status: false, message: 'reviewedBy is mandatory and should have non empty String' })
-        }
-
-        if(!nameRegex.test(reviewedBy)) return res.status(400).send({ status: false, message: 'reviewedBy should be valid name' })
+        if(!nameRegex.test(reviewedBy)) return res.status(400).send({ status: false, message: 'reviewedBy should be valid name and have non empty string' })
 
         bodyData.bookId=data
 
