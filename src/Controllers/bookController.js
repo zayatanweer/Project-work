@@ -236,16 +236,16 @@ const updateBook=async function(req,res){
 
     let getBookData = await bookModel.findById({_id:bookId});
 
+    if (!getBookData) return res.status(404).send({ status: false, message: 'No Book found' });
+
+    if(getBookData.isDeleted==true) return res.status(400).send({ status: false, message: 'The Book is already deleted' });
+
     const oneUserId=getBookData.userId.toString()
     //authorization
     const decodedToken = req.decodedToken;
 
     if (decodedToken !== oneUserId) return res.status(403).send({ status: false, message: 'You are not authorized so You can not update the book' });
 
-    if (!getBookData) return res.status(404).send({ status: false, message: 'No Book found' });
-
-    if(getBookData.isDeleted==true) return res.status(400).send({ status: false, message: 'The Book is already deleted' });
- 
       let data = req.body
 
      let {title,excerpt,ISBN,releasedAt}=data
@@ -339,6 +339,14 @@ const deleteBook = async function (req,res){
 
     let book = await bookModel.findById(bookId);
 
+    if(!book){
+      return res.status(404).send({staus:false,message:"This book is doesn't exist"});
+    }
+
+    if (book.isDeleted == true) {
+      return res.status(400).send({staus:false,message:"This book is already deleted"});
+    }
+    
     const oneUserId=book.userId.toString()
     //authorization
     const decodedToken = req.decodedToken;
@@ -346,16 +354,10 @@ const deleteBook = async function (req,res){
       if (decodedToken !== oneUserId)
       return res.status(403).send({ status: false, message: 'You are not authorized so You can not delete the book' });
 
-      if(!book){
-      return res.status(404).send({staus:false,message:"This book is doesn't exist"});
-    }
-
-    if (book.isDeleted == true) {
-      return res.status(400).send({staus:false,message:"This book is already deleted"});
-    } else {
+   
       let deleteBook = await bookModel.findOneAndUpdate({ _id: bookId },{ isDeleted: true, deletedAt: new Date() },{ new: true });
       return res.status(200).send({status: true,message: "book is deleted successfully"});
-    }
+  
   } catch (err) {
     return res.status(500).send({ msg: err.message });
   }

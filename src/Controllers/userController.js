@@ -66,8 +66,9 @@ const createUser = async function (req, res) {
         if (!isValid(password)) {
             return res.status(400).send({ status: false, message: 'Password is mandatory and should have non empty String' })
         }
+
         if(!isValidPassword(password)) { 
-            return res.status(400).send({status: false, message: 'please provide Valid password with Min length 8 and Max length 15' })
+            return res.status(400).send({status: false, message: 'please provide Valid password with 1st letter should be Capital letter and contains spcial character with Min length 8 and Max length 15' })
     }
 
         if(address){

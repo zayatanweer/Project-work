@@ -94,9 +94,9 @@ const updateReview = async function(req,res){
         let data = req.body
         if(!isVAlidRequestBody(data))return res.status(400).send({status:false, message:"plz enter some input to upadate the review"})
 
-        if(Object.keys(data).length>3) return res.status(400).send({ status: false, message: "Please give only 3 inputs to update review" })
+        // if(Object.keys(data).length>3) return res.status(400).send({ status: false, message: "Please give only 3 inputs to update review" })
 
-        let {review, rating, reviewedBy} = data
+        let {review, rating, reviewedBy,reviewedAt} = data
 
         if (!isValid(rating)) {
             return res.status(400).send({ status: false, message: 'rating is mandatory and should have non empty String' })
@@ -110,11 +110,11 @@ const updateReview = async function(req,res){
 
         if(!nameRegex.test(reviewedBy)) return res.status(400).send({ status: false, message: 'reviewedBy should be valid name' })
 
-        let updateReview = await reviewModel.findOneAndUpdate({_id: reviewId, bookId: bookId}, {$set:{review:review, rating: rating, reviewedBy:reviewedBy}}, {new: true}).select({isDeleted:0,__v:0})
+        let updateReview = await reviewModel.findOneAndUpdate({_id: reviewId, bookId: bookId}, {$set:{review:review, rating: rating, reviewedBy:reviewedBy,reviewedAt:reviewedAt}}, {new: true}).select({isDeleted:0,__v:0})
 
         const{_id,title,excerpt,userId,category,subcategory,isDeleted,reviews,releasedAt}=bookExist
 
-        const obj={_id,title,excerpt,userId,category,subcategory,isDeleted,reviews,releasedAt,updatedReview:updateReview}
+        const obj={_id,title,excerpt,userId,category,subcategory,isDeleted,reviews,releasedAt,reviewedAt,updatedReview:updateReview}
 
         return res.status(200).send({status: true, message: "updated successfully", data:obj })
     }
