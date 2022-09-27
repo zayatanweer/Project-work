@@ -15,21 +15,21 @@ const isValid = function (value) {
         if (pass.test(pw)) return true;
       };
 
-      const validString=function(value){
-        if(typeof value==='string' && value.trim().length===0) return false
-        return true
+    const validString=function(value){
+      if(typeof value==='string' && value.trim().length===0) return false
+      return true
       }
       
     const objectIdValid = function (value) {
       return mongoose.Types.ObjectId.isValid(value);
       };
 
-      let regexSpaceChar = function (attribute) {
-        return (/^[A-Za-z\s]{1,}[\,]{0,1}[A-Za-z\s]{0,}$/.test(attribute))
-        }
+    let regexSpaceChar = function (attribute) {
+      return (/^[A-Za-z\s]{1,}[\,]{0,1}[A-Za-z\s]{0,}$/.test(attribute))
+      }
 
     const nameRegex = /^[A-Za-z][A-Za-z\'\-]+([\ A-Za-z][A-Za-z\'\-]+)*/
-    
+
     const phoneRegex =  /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/
 
     const emailRegex = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/

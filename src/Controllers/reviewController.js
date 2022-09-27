@@ -1,16 +1,11 @@
 const reviewModel=require("../Models/reviewModel")
 const bookModel = require('../Models/bookModel');
 
-const {
-    isValid,
-    isVAlidRequestBody,
-    objectIdValid,
-    nameRegex,
-    ratingRegex
-  } = require('../validators/validator');
+const { isValid, isVAlidRequestBody, objectIdValid, nameRegex, ratingRegex } = require('../validators/validator');
 
 
 //<=======================================Crete Review======================================================================>
+
 const createReview = async function (req, res) {
     try {
         let data = req.params.bookId;
@@ -25,7 +20,6 @@ const createReview = async function (req, res) {
         if (!isVAlidRequestBody(bodyData)) {
             return res.status(400).send({ status: false, message: "Please give the Input to Create the User" })
         }
-
         if(Object.keys(bodyData).length>3) return res.status(400).send({ status: false, message: "Please give only 3 inputs to create review" })
 
         let getBookData = await bookModel.findById({ _id: data });
@@ -67,7 +61,9 @@ const createReview = async function (req, res) {
     }
 };
 
+
 //<=======================================Update Review======================================================================>
+
 const updateReview = async function(req,res){
     try{
 

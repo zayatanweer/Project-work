@@ -5,6 +5,7 @@ const {isValid,isVAlidRequestBody,nameRegex,phoneRegex,emailRegex,isValidPasswor
 
 
 //<=======================================Create User================================================>
+
 const createUser = async function (req, res) {
  try {
         const data = req.body
@@ -26,50 +27,38 @@ const createUser = async function (req, res) {
         if(!titles.includes(title)) {
             return res.status(400).send({ status: false, message:`title should be among  ${titles} `})
         } 
- 
-     if (!isValid(name)) {
+        if (!isValid(name)) {
             return res.status(400).send({ status: false, message: 'Name is mandatory and should have non empty String' })
         }
-
         if (!nameRegex.test(name)) {
             return res.status(400).send({ status: false, message: "please provide Valid Name" })
         }
-
         if (!isValid(phone)) {
             return res.status(400).send({ status: false, message: 'Phone Number is mandatory and should have non empty String' })
         }
-
         if (!phoneRegex.test(phone)) {
             return res.status(400).send({ status: false, message: "please provide Valid phone Number" })
         }
-
         const isPhoneAlreadyUsed = await userModel.findOne({phone})
         if (isPhoneAlreadyUsed) {
             return res.status(400).send({ status: false, message: "Phone Number Already Registered" })
         }
-
-      
-
         if (!isValid(email)) {
             return res.status(400).send({ status: false, message: 'Email is mandatory and should have non empty String' })
         }
-
         if (!emailRegex.test(email)) {
             return res.status(400).send({ status: false, message: "please provide Valid Email" })
         }
-
         const isEmailAlreadyUsed = await userModel.findOne({ email })
         if (isEmailAlreadyUsed) {
             return res.status(400).send({ status: false, message: "Email Already Registered" })
         }
-
         if (!isValid(password)) {
             return res.status(400).send({ status: false, message: 'Password is mandatory and should have non empty String' })
         }
-
         if(!isValidPassword(password)) { 
             return res.status(400).send({status: false, message: 'please provide Valid password with 1st letter should be Capital letter and contains spcial character with Min length 8 and Max length 15' })
-    }
+        }
 
         if(address){
             if(typeof address!=='object') return res.status(400).send({status:false,message:"the address should be in object"})
@@ -83,10 +72,8 @@ const createUser = async function (req, res) {
             if(!pincodeValid.test(address.pincode)) return res.status(400).send({status:false,message:"Please provide valid Pincode with min 4 number || max 6 number"})
             }
     
-
         const newUser = await userModel.create(data)
         return res.status(201).send({ status: true, message: 'Success', data: newUser })
-
     }
     catch (err) {
         return res.status(500).send({ status: false, error: err.message });
@@ -96,6 +83,7 @@ const createUser = async function (req, res) {
 
 
 //<=======================================Login User===========================================>
+
 const uesrLogin = async function (req, res){
     try {
         let data=req.body
@@ -103,11 +91,9 @@ const uesrLogin = async function (req, res){
 
         if(!isVAlidRequestBody(data)) 
         return res.status(400).send({status:false,message:"the input is requried to Login"})
-
         if (!isValid(email)) {
             return res.status(400).send({ status: false, message: 'Email should be non empty string' })
         }
-
         if (!isValid(password)) {
             return res.status(400).send({ status: false, message: 'password should be non empty string' })
         }
