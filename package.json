@@ -1,0 +1,25 @@
+{
+  "name": "plutonium",
+  "version": "1.0.0",
+  "description": "project-4/urlShortnerGroup-31",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sabihak89/plutonium.git"
+  },
+  "author": "sonu kamble,tanweer zaya, jatin kumar,rupali kumari",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sabihak89/plutonium/issues"
+  },
+  "homepage": "https://github.com/sabihak89/plutonium#readme",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "express": "^4.18.1",
+    "mongoose": "^6.6.2",
+    "nodemon": "^2.0.20"
+  }
+}
