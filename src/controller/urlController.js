@@ -1,6 +1,6 @@
 const urlModel=require('../model/urlModel')
 const shortId =require('shortid')
-const validurl=require('valid-url')
+// const validurl=require('valid-url')
 const url=require('validator')
 
 const createUrl =async function(req,res){
@@ -38,26 +38,20 @@ const createUrl =async function(req,res){
     }
 }
 
+const getUrl = async function (req, res) {
+    try {
+        let urlCode = req.params.urlCode
 
+        if(!urlCode) return res.status(400).send({status:false,msg:"longUrl is required"})
 
+        let urlDetails = await urlModel.findOne({ urlCode: urlCode })
+        if (!urlDetails) return res.status(400).send({ status: false, message: "URL not found" })
 
+        return res.status(302).redirect(urlDetails.longUrl)
 
+    } catch (error) {
 
-const geturl = async function(req,res){
-   try{
-    let urlcode = req.params.urlcode
-    const findurl = await urlModel.findOne({urlcode:urlcode})
-//     if(findurl){
-// const myurl = await urlModel(req.params.urlCode)
-// if(!myurl)   return res.status(500).send({msg: err.message})
-
-//         return res.redirect(findurl.longUrl)
-    //}
-    
-    return res.send({data:findurl})
-   }
-   catch(err){
-    return res.status(500).send({msg: err.message})
+        res.status(500).send({ status: 'error', error: error.message })
+    }
 }
-}
-module.exports={createUrl,geturl}
+module.exports = { createUrl, getUrl };

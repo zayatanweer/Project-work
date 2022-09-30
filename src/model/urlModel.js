@@ -20,3 +20,20 @@ const urlSchema = new mongoose.Schema( {
       },{timestamps: true});
 
 module.exports = mongoose.model('Urls', urlSchema)
+
+
+
+
+
+
+// function countFre(str){
+//   let obj={}
+//   for (let i=0;i<str.length;i++) {
+//     obj[str[i]]=(obj[str[i]] || 0)+1
+
+//   }
+   
+    
+//   console.log(obj)
+// }
+// console.log(countFre("ruppaalli"))
