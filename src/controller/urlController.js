@@ -43,8 +43,8 @@ const createUrl = async function (req, res) {
         if (typeof data.longUrl != "string") {
             return res.status(400).send({ status: false, msg: 'long url is invalid' })
         }
-        if (!(/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/.test(data.longUrl)))
-            if (!url.isURL(data.longUrl)) {
+        if (!(/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/.test(data.longUrl))){
+            // if (!url.isURL(data.longUrl)) {
                 return res.status(400).send({ status: false, msg: "long url is invalid" })
             }
         let urlCode = shortId.generate().toLowerCase()
@@ -73,9 +73,9 @@ const getUrl = async function (req, res) {
             // console.log("data is coming from redis")
             return res.status(302).redirect(cachedData.longUrl)
         }
-        if (!urlCode) return res.status(400).send({ status: false, msg: "longUrl is required" })
+        // if (!urlCode) return res.status(400).send({ status: false, msg: "longUrl is required" })
         let urlDetails = await urlModel.findOne({ urlCode: urlCode })
-        if (!urlDetails) return res.status(400).send({ status: false, message: "URL not found" })
+        if (!urlDetails) return res.status(404).send({ status: false, message: "URL not found" })
         //    console.log("data is coming from mongoDB")
         const myResult = await SET_ASYNC(`${urlDetails.urlCode}`, JSON.stringify(urlDetails), "EX", 20);
         return res.status(302).redirect(urlDetails.longUrl)
