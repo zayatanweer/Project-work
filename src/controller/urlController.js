@@ -4,14 +4,15 @@ const url = require('validator')
 
 
 //-------we using redis here------//
+
 const redis = require('redis');
 const { promisify } = require("util");
 const redisClient = redis.createClient(
-    11295,
-    "redis-11295.c301.ap-south-1-1.ec2.cloud.redislabs.com",
+    13782,
+    "redis-13782.c264.ap-south-1-1.ec2.cloud.redislabs.com",
     { no_ready_check: true }
 );
-redisClient.auth("PlOG4VJlbIKrBaq3gWNykxuj358wPnBu", (err) => {
+redisClient.auth("6l1FITNhABfe2hjJeON3mpGsmFODstHZ", (err) => {
     if (err) throw err;
 });
 redisClient.on("connect", async () => {
@@ -20,10 +21,9 @@ redisClient.on("connect", async () => {
 const SET_ASYNC = promisify(redisClient.SET).bind(redisClient);
 const GET_ASYNC = promisify(redisClient.GET).bind(redisClient);
 
-//---------Redis command ends---------------------
 
 
-
+//--------------createUrl---------------------//
 
 const createUrl = async function (req, res) {
     try {
@@ -63,7 +63,7 @@ const createUrl = async function (req, res) {
 
 
 
-
+//--------------getUrl---------------------//
 
 const getUrl = async function (req, res) {
     try {
@@ -75,7 +75,7 @@ const getUrl = async function (req, res) {
         }
         // if (!urlCode) return res.status(400).send({ status: false, msg: "longUrl is required" })
         let urlDetails = await urlModel.findOne({ urlCode: urlCode })
-        if (!urlDetails) return res.status(404).send({ status: false, message: "URL not found" })
+        if (!urlDetails) return res.status(404).send({ status: false, message: "URLCode is not valid" })
         //    console.log("data is coming from mongoDB")
         const myResult = await SET_ASYNC(`${urlDetails.urlCode}`, JSON.stringify(urlDetails), "EX", 20);
         return res.status(302).redirect(urlDetails.longUrl)
