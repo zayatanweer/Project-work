@@ -2,62 +2,63 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
 
-    fname:{
+    fname: {
         type: String,
         required: true
     },
     lname: {
-        type: String, 
+        type: String,
         required: true
     },
     email: {
-        type:String, 
+        type: String,
         required: true,
         unique: true,
-        },
+    },
     profileImage: {
-        type: String, 
+        type: String,
         required: true,
-        }, // s3 link
+    }, // s3 link
     phone: {
-        type: String, 
+        type: String,
         required: true,
         unique: true,
-        }, 
+    },
     password: {
-        type:String, 
+        type: String,
         required: true,
         unique: true
     }, // encrypted password
     address: {
-      shipping: {
-        street: {
-            type: String, 
-            required: true,
+        shipping: {
+            street: {
+                type: String,
+                required: true,
+            },
+            city: {
+                type: String,
+                required: true,
+            },
+            pincode: {
+                type: Number,
+                required: true,
+            }
         },
-        city: {
-            type:String, 
-            required: true,
-        },
-        pincode: {
-            type: Number, 
-            required: true,
+        billing: {
+            street: {
+                type: String,
+                required: true,
+            },
+            city: {
+                type: String,
+                required: true,
+            },
+            pincode: {
+                type: Number,
+                required: true,
+            }
         }
-      }},
-      billing: {
-        street: {
-            type: String, 
-            required: true,
-        },
-        city: {
-            type: String, 
-            required: true,
-        },
-        pincode: {
-            type: Number, 
-            required: true,
-        }
-      }
-},{timestamps: true})
+    },
+}, { timestamps: true })
 
-module.exports= mongoose.model("user", userSchema)
+module.exports = mongoose.model("user", userSchema)

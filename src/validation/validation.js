@@ -1,45 +1,46 @@
 const mongoose = require("mongoose");
 
 
+const checkEmptyBody = (obj) => { return Object.keys(obj).length > 0 }
+
+
+//-------------------Value Validation--------------------------->>
+const isEmpty = function (value) {
+  if (typeof value === "undefined" || value === null) return false;
+  if (typeof value === "string" && value.trim().length === 0) return false;
+  return true;
+};
 
 //<<----------------Validation for Email --------------------->>
 const isValidEmail = function (email) {
-    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
-  };
+  return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
+};
 
-  
-  //-------------------Value Validation--------------------------->>
-const isEmpty = function (value) {
-    if (typeof value === "undefined" || value === null) return false;
-    if (typeof value === "string" && value.trim().length === 0) return false;
-    return true;
-  };
-
-  //--------------------ObjectId----------------------------------->>
+//--------------------ObjectId----------------------------------->>
 const isValidObjectId = (objectId) => {
-    return mongoose.Types.ObjectId.isValid(objectId);
-  };
+  return mongoose.Types.ObjectId.isValid(objectId);
+};
 
-  const street = function (street) {
-    const streetRegex = /^[a-z \, A-Z \d]+$/;
-    return streetRegex.test(street);
-  };
-  
-  //--------------------validation for city--------------------------->>
-  
-  const city = function (city) {
-    const cityRegex = /^[a-z A-Z]+$/;
-    return cityRegex.test(city);
-  };
-  //----------------------validation for pin code-------------------->>
-  
-  const pincode = function (pincode) {
-    const pinRegex = /^[\d]{6}$/;
-    return pinRegex.test(pincode);
-  };
+const street = function (street) {
+  const streetRegex = /^[a-z \, A-Z \d]+$/;
+  return streetRegex.test(street);
+};
+
+//--------------------validation for city--------------------------->>
+
+const city = function (city) {
+  const cityRegex = /^[a-z A-Z]+$/;
+  return cityRegex.test(city);
+};
+//----------------------validation for pin code-------------------->>
+
+const pincode = function (pincode) {
+  const pinRegex = /^[\d]{6}$/;
+  return pinRegex.test(pincode);
+};
 
 
-  
+
 
 // ----------------Name Validation-------------------------->>
 const isValidName = function (name) {
@@ -64,6 +65,7 @@ const isValidPassword = function (password) {
 
 
 module.exports = {
+  checkEmptyBody,
   isEmpty,
   pincode,
   city,
@@ -71,8 +73,6 @@ module.exports = {
   isValidEmail,
   isValidPhone,
   isValidObjectId,
-  
   isValidName,
   isValidPassword
 };
- 
