@@ -147,7 +147,7 @@
   - _**On success**_ - Return HTTP status 200. Also return the updated user document. The response should be a JSON object like [this](#successful-response-structure)
   - _**On error**_ - Return a suitable error message with a valid HTTP status code. The response should be a JSON object like [this](#error-response-structure)
 ```yaml
-{
+{ 
     "status": true,
     "message": "User profile updated",
     "data": {

@@ -21,20 +21,20 @@ const isValidObjectId = (objectId) => {
   return mongoose.Types.ObjectId.isValid(objectId);
 };
 
-const street = function (street) {
+const streetV = function (street) {
   const streetRegex = /^[a-z \, A-Z \d]+$/;
   return streetRegex.test(street);
 };
 
 //--------------------validation for city--------------------------->>
 
-const city = function (city) {
+const cityV = function (city) {
   const cityRegex = /^[a-z A-Z]+$/;
   return cityRegex.test(city);
 };
 //----------------------validation for pin code-------------------->>
 
-const pincode = function (pincode) {
+const pincodeV = function (pincode) {
   const pinRegex = /^[\d]{6}$/;
   return pinRegex.test(pincode);
 };
@@ -67,9 +67,9 @@ const isValidPassword = function (password) {
 module.exports = {
   checkEmptyBody,
   isEmpty,
-  pincode,
-  city,
-  street,
+  pincodeV,
+  cityV,
+  streetV,
   isValidEmail,
   isValidPhone,
   isValidObjectId,
