@@ -18,55 +18,78 @@ const {
 const createUser = async function (req, res) {
     try {
         let body = req.body;
-        if (!checkEmptyBody(body)) return res(400).send({status: false, message: "please provide data in request body"});
+        if (!checkEmptyBody(body)) return res(400).send({ status: false, message: "please provide data in request body" });
 
         let { fname, lname, email, profileImage, phone, password, address, ...rest } = body;
         // if (rest)return res(400).send({status: false, message: "please provide required details only"})
 
-        if(!isEmpty(fname)) return res(400).send({status: false, message: "fname is required"});
-        
-        if(!isValidName(fname)) return res(400).send({status: false, message: "fname is invalid"});
+        if (!isEmpty(fname)) return res(400).send({ status: false, message: "fname is required" });
+        if (!isValidName(fname)) return res(400).send({ status: false, message: "fname is invalid" });
 
-        if(!isEmpty(lname)) return res(400).send({status: false, message: "lname is required"})
+        if (!isEmpty(lname)) return res(400).send({ status: false, message: "lname is required" })
+        if (!isValidName(lname)) return res(400).send({ status: false, message: "lname is invalid" })
 
-        if(!isValidName(lname)) return res(400).send({status: false, message: "lname is invalid"})
-        
-        if(!isEmpty(email)) return res(400).send({status: false, message: "email is required"})
-        
-        if(!isValidEmail(email)) return res(400).send({status: false, message: "lname is invalid"})
-        
+        if (!isEmpty(email)) return res(400).send({ status: false, message: "email is required" })
+        if (!isValidEmail(email)) return res(400).send({ status: false, message: "lname is invalid" })
+
         // if(!isEmpty(profileImage)) return res(400).send({status: false, message: "profileImage is required"})
         let files = req.files;
-        if (!files || files.length == 0) return res.status(400).send({status: false, message: "please provide file"})
+        if (!files || files.length == 0) return res.status(400).send({ status: false, message: "please provide file" })
         let imageUrl = await uploadFile(files[0])
         body.profileImage = imageUrl;
 
-        if(!isEmpty(phone)) return res(400).send({status: false, message: "phone is required"})
+        if (!isEmpty(phone)) return res(400).send({ status: false, message: "phone is required" })
+        if (!isValidPhone(phone)) return res(400).send({ status: false, message: "lname is invalid" })
 
-        if(!isValidPhone(phone)) return res(400).send({status: false, message: "lname is invalid"})
+        if (!isEmpty(password)) return res(400).send({ status: false, message: "password is required" })
+        if (!isValidPassword(password)) return res(400).send({ status: false, message: "lname is invalid" })
 
-        if(!isEmpty(password)) return res(400).send({status: false, message: "password is required"})
+        if (!isEmpty(address)) return res(400).send({ status: false, message: "address is required" })
+        //validate address
+        if (!address) return res.status(400).send({ status: false, message: "Enter address" })
+
+        try {
+            address = JSON.parse(address);
+        }
+        catch (err) {
+            console.log(err)
+            return res.status(400).send({ status: false, message: "address is not a valid object" })
+        }
+
+        if (typeof address !== "object") return res.status(400).send({ status: false, message: "address should be in object format" })
         
-        if(!isValidPassword(password)) return res(400).send({status: false, message: "lname is invalid"})
+        if (Object.keys(address).length == 0) return res.status(400).send({ status: false, message: "please enter a valid address" })
 
-        if(!isEmpty(address)) return res(400).send({status: false, message: "address is required"})
+        if (!address.shipping) return res.status(400).send({ status: false, message: "please enter shipping address and it should be in object also." })
+        else {
 
-        if (typeOf(address) != 'object') return res(400).send({status: false, message: "please provide address as object"})
+            let { street, city, pincode } = address.shipping;
 
-        const {street, city, pincode} = address.shipping 
-        if(!isEmpty(street)) return res(400).send({status: false, message: "street is required for shipping"})
-        if(!street(street)) return res(400).send({status: false, message: "street is invalid for shipping"})
-        if(!isEmpty(city)) return res(400).send({status: false, message: "city is required for shipping"})
-        if(!city(city)) return res(400).send({status: false, message: "city is invalid for shipping"})
-        if(!isEmpty(pincode)) return res(400).send({status: false, message: "pincode is required for shipping"})
-        if(!pincode(pincode)) return res(400).send({status: false, message: "pincode is invalid for shipping"})
+            if (!isEmpty(street)) return res.status(400).send({ status: false, message: "enter shipping street" })
+            if (!street(street)) return res.status(400).send({ status: false, message: "provide a valid Shipping Street Name" })
 
-        if(!isEmpty(address.billing.street)) return res(400).send({status: false, message: "street is required for billing"})
-        if(!street(address.billing.street)) return res(400).send({status: false, message: "street is invalid for billing"})
-        if(!isEmpty(address.billing.city)) return res(400).send({status: false, message: "city is required for billing"})
-        if(!city(address.billing.city)) return res(400).send({status: false, message: "city is invalid for billing"})
-        if(!isEmpty(address.billing.pincode)) return res(400).send({status: false, message: "pincode is required for billing"})
-        if(!pincode(address.billing.pincode)) return res(400).send({status: false, message: "pincode is invalid for billing"})
+            if (!isEmpty(city)) return res.status(400).send({ status: false, message: "enter Shipping city" })
+            if (!city(city.trim())) return res.status(400).send({ status: false, message: "provide a valid Shipping City Name" })
+
+            if (!isEmpty(pincode)) return res.status(400).send({ status: false, message: "enter Shipping Pincode" })
+            if (!pincode(pincode)) return res.status(400).send({ status: false, message: "provide a valid pincode" })
+        }
+
+
+        if (!address.billing) return res.status(400).send({ status: false, message: "Please enter Billing address and it should be in object!!" })
+
+        let { street, city, pincode } = address.billing;
+
+        if (!isEmpty(street)) return res.status(400).send({ status: false, message: "Please Enter Billing street Name" })
+        if (!street(street)) return res.status(400).send({ status: false, message: "provide a valid Billing Street Name" })
+
+        if (!isEmpty(city)) return res.status(400).send({ status: false, message: "Please enter Billing City Name" })
+        if (!city(city.trim())) return res.status(400).send({ status: false, message: "provide a Billing City Name" })
+
+
+        if (!keyValid(pincode)) return res.status(400).send({ status: false, message: "Enter Shipping Pincode" })
+        if (!pincode(pincode)) return res.status(400).send({ status: false, message: "provide a valid pincode" })
+
 
 
 
