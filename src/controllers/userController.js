@@ -264,14 +264,14 @@ const updateUserProfile = async function (req, res) {
         
 
         // if (!isEmpty(fname)) return res.status(400).send({ status: false, message: "fname is Mandatory,Please provide some input" });
-        if (!isValidName(fname)) return res.status(400).send({ status: false, message: "fname is Not valid" });
+        if (fname&&!isValidName(fname)) return res.status(400).send({ status: false, message: "fname is Not valid" });
 
 
         // if (!isEmpty(lname)) return res.status(400).send({ status: false, message: "lname is Mandatory,Please Provide some input" })
-        if (!isValidName(lname)) return res.status(400).send({ status: false, message: "lname is Not valid" })
+        if (lname&&!isValidName(lname)) return res.status(400).send({ status: false, message: "lname is Not valid" })
 
         // if (!isEmpty(email)) return res.status(400).send({ status: false, message: "email is Mandatory,please provide some input" })
-        if (!isValidEmail(email)) return res.status(400).send({ status: false, message: "email is Not  valid" })
+        if (email&&!isValidEmail(email)) return res.status(400).send({ status: false, message: "email is Not  valid" })
 
             const uniqueEmail = await userModel.findOne({ email: email })
             if (uniqueEmail) {
@@ -280,7 +280,7 @@ const updateUserProfile = async function (req, res) {
         
 
     // if (!isEmpty(phone)) return res.status(400).send({ status: false, message: "phone is Mandatory" })
-    if (!isValidPhone(phone)) return res.status(400).send({ status: false, message: "phone is Not  valid,please provide unique phone no" })
+    if (phone&&!isValidPhone(phone)) return res.status(400).send({ status: false, message: "phone is Not  valid,please provide unique phone no" })
 
     
             let uniquePhone = await userModel.findOne({ phone: phone })
