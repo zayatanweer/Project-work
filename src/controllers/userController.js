@@ -30,7 +30,7 @@ const createUser = async function (req, res) {
         if (!isValidName(lname)) return res.status(400).send({ status: false, message: "lname is invalid" })
 
         if (!isEmpty(email)) return res.status(400).send({ status: false, message: "email is required" })
-        if (!isValidEmail(email)) return res.status(400).send({ status: false, message: "lname is invalid" })
+        if (!isValidEmail(email)) return res.status(400).send({ status: false, message: "email is invalid" })
 
         // if(!profileImage) return res.status(400).send({status: false, message: "profileImage is required"})
         let files = req.files;
@@ -39,10 +39,10 @@ const createUser = async function (req, res) {
         body.profileImage = imageUrl;
 
         if (!isEmpty(phone)) return res.status(400).send({ status: false, message: "phone is required" })
-        if (!isValidPhone(phone)) return res.status(400).send({ status: false, message: "lname is invalid" })
+        if (!isValidPhone(phone)) return res.status(400).send({ status: false, message: "phone is invalid" })
 
         if (!isEmpty(password)) return res.status(400).send({ status: false, message: "password is required" })
-        if (!isValidPassword(password)) return res.status(400).send({ status: false, message: "lname is invalid" })
+        if (!isValidPassword(password)) return res.status(400).send({ status: false, message: "password is invalid" })
 
 
         //validate address
