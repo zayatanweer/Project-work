@@ -425,7 +425,7 @@ Refer below sample
   title: 'Nit Grit',
   description: 'Dummy description',
   price: 23.0,
-  currencyId: 'INR',
+  currencyId: 'INR', 
   currencyFormat: '₹',
   isFreeShipping: false,
   productImage: 'http://function-up-test.s3.amazonaws.com/products/product/nitgrit.jpg',  // s3 link

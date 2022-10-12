@@ -7,6 +7,7 @@ aws.config.update({
     region: "ap-south-1"
 })
 
+
 let uploadFile = async (file) => {
     
     return new Promise(function (resolve, reject) {
