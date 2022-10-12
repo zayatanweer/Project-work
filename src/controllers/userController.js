@@ -15,6 +15,14 @@ const {
     isValidName,
     isValidPassword } = require("../validation/validation");
 
+    const passEncryption = async function(pass){
+
+        const salt = await bcrypt.genSalt(10);
+        let Encryptedpassword = await bcrypt.hash(pass, salt);
+
+        return Encryptedpassword
+    }
+
 //------------------------User Create------------------->>>>>
 
 const createUser = async function (req, res) {
@@ -96,8 +104,10 @@ const createUser = async function (req, res) {
         if (!pincodeValidation(pincode)) return res.status(400).send({ status: false, message: "provide a valid pincode" })
 
 
-        const salt = await bcrypt.genSalt(10);
-        let pass = await bcrypt.hash(password, salt);
+        // const salt = await bcrypt.genSalt(10);
+        // let pass = await bcrypt.hash(password, salt);
+
+        let pass =await passEncryption(password)
         body.password = pass
         console.log(pass)
 
@@ -169,7 +179,7 @@ const getUserProfile = async function (req, res) {
      
          if (!getUserData) return res.status(404).send({ status: false, message: 'No user details found with this userId' });
      
-         if (getUserData.isDeleted == true) return res.status(400).send({staus:false,message:'This user is already deleted'});
+        //  if (getUserData.isDeleted == true) return res.status(400).send({staus:false,message:'This user is already deleted'});
      
          let {fname, lname, email, profileImage, phone, password, address} = getUserData
      
@@ -192,16 +202,18 @@ const updateUserProfile = async function (req, res) {
 
 
         let data = req.body
-        let profileImage = req.files
-        if (profileImage && profileImage.length > 0) {
-            data.profileImage = profileImage
+        let image = req.files
+        if (image && image.length > 0) {
+
+            let img =await uploadFile(image[0])
+            data.profileImage = img
         }
 
 
         if (Object.keys(data).length == 0) {
             return res.status(400).send({ status: false, message: "please  provide Some field to update,its totally blank" })
         }
-        let { fname, lname, email, phone, password, address } = data
+        let { fname, lname, email, phone, password, address,profileImage  } = data
 
         //------------------------------------------update address---------------------------------------------------------
 
@@ -287,21 +299,20 @@ const updateUserProfile = async function (req, res) {
             if (uniquePhone) {
                 return res.status(400).send({ status: false, message: "phone already exist " })
             }
-        
 
+            if(password && !isValidPassword) return res.status(400).send({ status: false, message: "Password is not valid" })
 
-        if (profileImage && profileImage.length > 0) {
+        if (password && isValidPassword) {
 
-            var imageUrl = await uploadFile(profileImage[0])
+            var pass = await passEncryption(password)
+            
         }
 
 
 
-        let update = await userModel.updateOne({ _id: userId }, { $set: { fname: fname, lname: lname, email: email, phone: phone, password: password, address: add, profileImage: imageUrl } }, { new: true })
+        let update = await userModel.findByIdAndUpdate({ _id: userId }, { $set: { fname: fname, lname: lname, email: email, phone: phone, password: pass, address: add, image: profileImage  } }, { new: true })
 
-        let findUser1 = await userModel.findOne({ _id: userId })
-
-        return res.status(200).send({ status: true, message: "User profile updated", data: findUser1 })
+        return res.status(200).send({ status: true, message: "User profile updated", data: update })
 
 
 
