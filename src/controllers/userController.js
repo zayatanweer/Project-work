@@ -65,14 +65,15 @@ const createUser = async function (req, res) {
 
 
         //validate address
+
+        address = JSON.parse(address)   // here you can call stack And execution
         
         if (!address) return res.status(400).send({ status: false, message: "address is required" })
         
-        if (typeof address !== "object") return res.status(400).send({ status: false, message: "address should be in object format" })
+        if (typeof body.address !== "object") return res.status(400).send({ status: false, message: "address should be in object format" })
         
         if (Object.keys(address).length == 0) return res.status(400).send({ status: false, message: "please enter a valid address" })
         
-        address = JSON.parse(address)   // here you can call stack And execution
 
         if (!address.shipping) return res.status(400).send({ status: false, message: "please enter shipping address and it should be in object also." })
         else {
@@ -110,9 +111,9 @@ const createUser = async function (req, res) {
 
         let pass =await passEncryption(password)
         body.password = pass
-        console.log(pass)
+        // console.log(pass)
 
-   console.log(body)
+//    console.log(body)
         const createdUser = await userModel.create(body);
         return res.status(201).send({ status: true, message: "User created successfully", data: createdUser });
     }
