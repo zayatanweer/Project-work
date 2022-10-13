@@ -24,10 +24,14 @@ router.put("/user/:userId/profile",mw.Authentication, mw.Authorization, userCont
 //-----------------------product Api's-2---------------------------->>>>>>>>>>>
 
 //-----------------------create product details---------------------->>>>>>>>>
-router.get("/products",productController.createProducts);
+router.post("/products",productController.createProducts);
 
 //-----------------------get product details---------------------->>>>>>>>>
 router.get("/products/:productId",productController.getProductProfile);
+
+//----------------------get product details filter apply---------->>>>>>>>>
+router.get("/products",productController.getProductWithFilter);
+
 
 //-----------------------update product details---------------------->>>>>>>>>
 router.put("/products/:productId",productController.updateProduct);
