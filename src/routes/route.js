@@ -1,7 +1,7 @@
 const express= require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
-const productController = require("../controllers/productController");
+const {createProducts, getProductProfile, getProductsWithFilter, updateProduct, deleteProductDetails} = require("../controllers/productController");
 const mw = require("../middleware/auth")
 
 
@@ -24,16 +24,19 @@ router.put("/user/:userId/profile",mw.Authentication, mw.Authorization, userCont
 //-----------------------product Api's-2---------------------------->>>>>>>>>>>
 
 //-----------------------create product details---------------------->>>>>>>>>
-router.get("/products",productController.createProducts);
+router.post("/products", createProducts);
 
 //-----------------------get product details---------------------->>>>>>>>>
-router.get("/products/:productId",productController.getProductProfile);
+router.get("/products/:productId", getProductProfile);
+
+//-----------------------get product details from query---------------------->>>>>>>>>
+router.get("/products", getProductsWithFilter);
 
 //-----------------------update product details---------------------->>>>>>>>>
-router.put("/products/:productId",productController.updateProduct);
+router.put("/products/:productId", updateProduct);
 
 //-----------------------delete product details---------------------->>>>>>>>>
-router.delete("/products/:productId", productController.deleleteProductDetails);
+router.delete("/products/:productId", deleteProductDetails);
 
 
 

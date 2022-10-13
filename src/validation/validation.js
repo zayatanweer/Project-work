@@ -62,6 +62,33 @@ const isValidPassword = function (password) {
 };
 
 
+//* PRODUCT VALIDATIONS *//
+
+//------------------ size Validation----------------------->>
+const isValidSize = (sizes) => {
+  return ["S", "XS", "M", "X", "L", "XXL", "XL"].includes(sizes);
+}
+
+//------------------ price Validation----------------------->>
+const isValidPrice = (price) => { return /^[\d]+$/.test(price) }
+
+//------------------ installment Validation----------------------->>
+const isValidInstallments = (installments) => { return /^[\d]+$/.test(installments) }
+
+//------------------ number Validation----------------------->>
+const isValidNum = (num) => { return /^[0-9]*[1-9]+$|^[1-9]+[0-9]*$/.test(num); }
+
+//------------------ style Validation----------------------->>
+const isValidStyle = (style) => { return /^[a-z A-Z]*$/.test(style); }
+
+
+//------------------ boolean Validation----------------------->>
+const isValidBoolean = (value) => {
+  if (!(typeof value === "boolean")) return false
+  return true
+}
+
+
 
 
 module.exports = {
@@ -74,5 +101,11 @@ module.exports = {
   isValidPhone,
   isValidObjectId,
   isValidName,
-  isValidPassword
+  isValidPassword,
+  isValidSize,
+  isValidPrice,
+  isValidInstallments,
+  isValidNum,
+  isValidStyle,
+  isValidBoolean
 };

@@ -34,24 +34,5 @@ let uploadFile = async (file) => {
     })
 }
 
-const file = async function (req, res) {
-    try {
-        let files = req.files
-
-        if (files && files.length > 0) {
-
-            let uploadedFileURL = await uploadFile(files[0])
-            res.status(201).send({ msg: "file uploaded succesfully", data: uploadedFileURL })
-        }
-        else {
-            res.status(400).send({ msg: "No file found" })
-        }
-
-    } catch (error) {
-        res.status(500).send({ msg: error.message })
-    }
-
-}
-
 
 module.exports = { uploadFile };

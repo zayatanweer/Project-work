@@ -15,13 +15,13 @@ const {
     isValidName,
     isValidPassword } = require("../validation/validation");
 
-    const passEncryption = async function(pass){
+const passEncryption = async function (pass) {
 
-        const salt = await bcrypt.genSalt(10);
-        let Encryptedpassword = await bcrypt.hash(pass, salt);
+    const salt = await bcrypt.genSalt(10);
+    let Encryptedpassword = await bcrypt.hash(pass, salt);
 
-        return Encryptedpassword
-    }
+    return Encryptedpassword
+}
 
 //------------------------User Create------------------->>>>>
 
@@ -33,8 +33,6 @@ const createUser = async function (req, res) {
         let { fname, lname, email, profileImage, phone, password, address, ...rest } = body;
         // if (rest)return res(400).send({status: false, message: "please provide required details only"})
 
-        body.address = JSON.parse(address)
-
         if (!isEmpty(fname)) return res.status(400).send({ status: false, message: "fname is required" });
         if (!isValidName(fname)) return res.status(400).send({ status: false, message: "fname is invalid" });
 
@@ -44,8 +42,8 @@ const createUser = async function (req, res) {
         if (!isEmpty(email)) return res.status(400).send({ status: false, message: "email is required" })
         if (!isValidEmail(email)) return res.status(400).send({ status: false, message: "email is invalid" })
 
-        let isPresentEmail = await userModel.findOne({email})
-        if(isPresentEmail) return res.status(409).send({ status: false, message: "Email is already present.." })
+        let isPresentEmail = await userModel.findOne({ email })
+        if (isPresentEmail) return res.status(409).send({ status: false, message: "Email is already present.." })
 
 
         // if(!profileImage) return res.status(400).send({status: false, message: "profileImage is required"})
@@ -53,26 +51,26 @@ const createUser = async function (req, res) {
         if (!files || files.length == 0) return res.status(400).send({ status: false, message: "please provide file" })
         let imageUrl = await uploadFile(files[0])
         body.profileImage = imageUrl;
-    
+
         if (!isEmpty(phone)) return res.status(400).send({ status: false, message: "phone is required" })
         if (!isValidPhone(phone)) return res.status(400).send({ status: false, message: "phone is invalid" })
 
-        let isPresentPhone = await userModel.findOne({phone})
-        if(isPresentPhone) return res.status(409).send({ status: false, message: "Phone No. is already present.." })
+        let isPresentPhone = await userModel.findOne({ phone })
+        if (isPresentPhone) return res.status(409).send({ status: false, message: "Phone No. is already present.." })
 
         if (!isEmpty(password)) return res.status(400).send({ status: false, message: "password is required" })
         if (!isValidPassword(password)) return res.status(400).send({ status: false, message: "password is invalid" })
 
 
         //validate address
-        
         if (!address) return res.status(400).send({ status: false, message: "address is required" })
-        
-        if (typeof address !== "object") return res.status(400).send({ status: false, message: "address should be in object format" })
-        
-        if (Object.keys(address).length == 0) return res.status(400).send({ status: false, message: "please enter a valid address" })
-        
+
+        body.address = JSON.parse(address)
         address = JSON.parse(address)   // here you can call stack And execution
+
+        if (typeof address !== "object") return res.status(400).send({ status: false, message: "address should be in object format" })
+
+        if (Object.keys(address).length == 0) return res.status(400).send({ status: false, message: "please enter a valid address" })
 
         if (!address.shipping) return res.status(400).send({ status: false, message: "please enter shipping address and it should be in object also." })
         else {
@@ -108,19 +106,19 @@ const createUser = async function (req, res) {
         // const salt = await bcrypt.genSalt(10);
         // let pass = await bcrypt.hash(password, salt);
 
-        let pass =await passEncryption(password)
+        let pass = await passEncryption(password)
         body.password = pass
         console.log(pass)
 
-   console.log(body)
+        console.log(body)
         const createdUser = await userModel.create(body);
         return res.status(201).send({ status: true, message: "User created successfully", data: createdUser });
     }
     catch (error) {
         res.status(500).send({ status: false, error: error.message })
     }
-}   
-      
+}
+
 //----------------User Login------------------------>>>>>
 const loginUser = async function (req, res) {
     try {
@@ -155,7 +153,7 @@ const loginUser = async function (req, res) {
         }
 
         // creating token
-        let token = jwt.sign( payLoad , " ~ functionUp--project-5--product-management-group-44 ~ ")
+        let token = jwt.sign(payLoad, " ~ functionUp--project-5--product-management-group-44 ~ ")
 
         res.header('Authorization', token);
         return res.status(201).send({ status: true, message: 'Success', data: { userId: `${findUser._id}`, token: token } });
@@ -174,17 +172,17 @@ const getUserProfile = async function (req, res) {
 
         let data = req.params.userId;
 
-        if(!isValidObjectId(data)) return res.status(400).send({staus:false,message:"Please provide valid userId"})
-     
-         let getUserData = await userModel.findById({_id:data});
-     
-         if (!getUserData) return res.status(404).send({ status: false, message: 'No user details found with this userId' });
-     
+        if (!isValidObjectId(data)) return res.status(400).send({ status: false, message: "Please provide valid userId" })
+
+        let getUserData = await userModel.findById({ _id: data });
+
+        if (!getUserData) return res.status(404).send({ status: false, message: 'No user details found with this userId' });
+
         //  if (getUserData.isDeleted == true) return res.status(400).send({staus:false,message:'This user is already deleted'});
-     
+
         //  let {fname, lname, email, profileImage, phone, password, address} = getUserData
-     
-         return res.status(200).send({ status: true, message: 'User profile details successfully fetch', data:getUserData, });
+
+        return res.status(200).send({ status: true, message: 'User profile details successfully fetch', data: getUserData, });
 
     }
     catch (error) {
@@ -205,14 +203,14 @@ const updateUserProfile = async function (req, res) {
         let image = req.files
         if (image && image.length > 0) {
 
-            let img =await uploadFile(image[0])
+            let img = await uploadFile(image[0])
             data.profileImage = img
         }
 
         if (Object.keys(data).length == 0) {
             return res.status(400).send({ status: false, message: "please  provide Some field to update,its totally blank" })
         }
-        let { fname, lname, email, phone, password, address,profileImage  } = data
+        let { fname, lname, email, phone, password, address, profileImage } = data
 
         //------------------------------------------update address---------------------------------------------------------
 
@@ -238,7 +236,7 @@ const updateUserProfile = async function (req, res) {
             if (address.billing == "") {
                 return res.status(400).send({ status: false, message: "please enter billing address to update" })
             }
-        
+
 
             if (address.shipping) {
                 if (typeof (address.shipping) != "object") {
@@ -270,46 +268,46 @@ const updateUserProfile = async function (req, res) {
                     add.billing.pincode = address.billing.pincode
                 }
             }
-        
+
         }
-        
+
 
         // if (!isEmpty(fname)) return res.status(400).send({ status: false, message: "fname is Mandatory,Please provide some input" });
-        if (fname&&!isValidName(fname)) return res.status(400).send({ status: false, message: "fname is Not valid" });
+        if (fname && !isValidName(fname)) return res.status(400).send({ status: false, message: "fname is Not valid" });
 
 
         // if (!isEmpty(lname)) return res.status(400).send({ status: false, message: "lname is Mandatory,Please Provide some input" })
-        if (lname&&!isValidName(lname)) return res.status(400).send({ status: false, message: "lname is Not valid" })
+        if (lname && !isValidName(lname)) return res.status(400).send({ status: false, message: "lname is Not valid" })
 
         // if (!isEmpty(email)) return res.status(400).send({ status: false, message: "email is Mandatory,please provide some input" })
-        if (email&&!isValidEmail(email)) return res.status(400).send({ status: false, message: "email is Not  valid" })
+        if (email && !isValidEmail(email)) return res.status(400).send({ status: false, message: "email is Not  valid" })
 
-            const uniqueEmail = await userModel.findOne({ email: email })
-            if (uniqueEmail) {
-                return res.status(400).send({ status: false, message: "email to update is already In Database,please give some unique email id." })
-            }
-        
+        const uniqueEmail = await userModel.findOne({ email: email })
+        if (uniqueEmail) {
+            return res.status(400).send({ status: false, message: "email to update is already In Database,please give some unique email id." })
+        }
 
-    // if (!isEmpty(phone)) return res.status(400).send({ status: false, message: "phone is Mandatory" })
-    if (phone&&!isValidPhone(phone)) return res.status(400).send({ status: false, message: "phone is Not  valid,please provide unique phone no" })
 
-    
-            let uniquePhone = await userModel.findOne({ phone: phone })
-            if (uniquePhone) {
-                return res.status(400).send({ status: false, message: "phone already exist " })
-            }
+        // if (!isEmpty(phone)) return res.status(400).send({ status: false, message: "phone is Mandatory" })
+        if (phone && !isValidPhone(phone)) return res.status(400).send({ status: false, message: "phone is Not  valid,please provide unique phone no" })
 
-            if(password && !isValidPassword) return res.status(400).send({ status: false, message: "Password is not valid" })
+
+        let uniquePhone = await userModel.findOne({ phone: phone })
+        if (uniquePhone) {
+            return res.status(400).send({ status: false, message: "phone already exist " })
+        }
+
+        if (password && !isValidPassword) return res.status(400).send({ status: false, message: "Password is not valid" })
 
         if (password && isValidPassword) {
 
             var pass = await passEncryption(password)
-            
+
         }
 
 
 
-        let update = await userModel.findByIdAndUpdate({ _id: userId }, { $set: { fname: fname, lname: lname, email: email, phone: phone, password: pass, address: add, image: profileImage  } }, { new: true })
+        let update = await userModel.findByIdAndUpdate({ _id: userId }, { $set: { fname: fname, lname: lname, email: email, phone: phone, password: pass, address: add, image: profileImage } }, { new: true })
 
         return res.status(200).send({ status: true, message: "User profile updated", data: update })
 
