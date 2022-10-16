@@ -18,7 +18,7 @@ let uploadFile = async (file) => {
         var uploadParams = {
             ACL: "public-read",
             Bucket: "classroom-training-bucket",  
-            Key: "plutonium/project-5/bookCoverData/" + file.originalname, 
+            Key: "plutonium/project-5/productManagement-GR:44/" + file.originalname, 
             Body: file.buffer
         }
 

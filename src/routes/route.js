@@ -1,47 +1,31 @@
-const express= require("express");
+const express = require("express");
 const router = express.Router();
-const userController = require("../controllers/userController");
-const {createProducts, getProductProfile, getProductsWithFilter, updateProduct, deleteProductDetails} = require("../controllers/productController");
-const mw = require("../middleware/auth")
 
-
-//-----------------------user Api's-1---------------------------->>>>>>>>>>>
-
-//-----------------------user creation---------------------->>>>>>>>>
-router.post("/register", userController.createUser);
-
-//-----------------------post api (user Login)------------------------>>>>>>>>>>
-router.post("/login", userController.loginUser);
-
-//---------------------Get User Profile-------------------->>>>>>>>>>>>>
-router.get("/user/:userId/profile",mw.Authentication, userController.getUserProfile);
-
-//-----------------------user Profile update----------------------------->>>>>>>>>>>
-router.put("/user/:userId/profile",mw.Authentication, mw.Authorization, userController.updateUserProfile);
+const { auth } = require("../middleware/auth")
+const { createUser, loginUser, getUserProfile, updateUserProfile } = require("../controllers/userController");
+const { createProducts, getProductProfile, getProductsWithFilter, updateProduct, deleteProductDetails } = require("../controllers/productController");
 
 
 
-//-----------------------product Api's-2---------------------------->>>>>>>>>>>
+//------------------------------------------------------------>     - FEATURE - I --- User Api's      <------------------------------------------------------------//
 
-//-----------------------create product details---------------------->>>>>>>>>
-router.post("/products", createProducts);
+router.post("/register", createUser);                                                           // >>>>>>>>> user creation (post-api)
+router.post("/login", loginUser);                                                               // >>>>>>>>> user login (post-api)
+router.get("/user/:userId/profile", auth, getUserProfile);                                      // >>>>>>>>> get user profile (get-api)     >> protected route
+router.put("/user/:userId/profile", auth, updateUserProfile);                                   // >>>>>>>>> update user profile (put-api)  >> protected route
 
-//-----------------------get product details---------------------->>>>>>>>>
-router.get("/products/:productId", getProductProfile);
 
-//-----------------------get product details from query---------------------->>>>>>>>>
-router.get("/products", getProductsWithFilter);
+//---------------------------------------------------------->     - FEATURE - II --- Product Api's      <----------------------------------------------------------//
 
-//-----------------------update product details---------------------->>>>>>>>>
-router.put("/products/:productId", updateProduct);
-
-//-----------------------delete product details---------------------->>>>>>>>>
-router.delete("/products/:productId", deleteProductDetails);
+router.post("/products", createProducts);                       // >>>>>>>>> product creation (post-api)
+router.get("/products/:productId", getProductProfile);          // >>>>>>>>> get product by product id (get-api)
+router.get("/products", getProductsWithFilter);                 // >>>>>>>>> get filtered products by query (get-api)
+router.put("/products/:productId", updateProduct);              // >>>>>>>>> update product (put-api)
+router.delete("/products/:productId", deleteProductDetails);    // >>>>>>>>> delete product (delete-api)    
 
 
 
 
-router.all('/*',async function(req,res){
-    return res.status(404).send({status:false,message:"Page Not Found"});
-})
-module.exports= router;
+router.all('/*', async (req, res) => { return res.status(404).send({ status: false, message: "Page Not Found" }); });
+
+module.exports = router;

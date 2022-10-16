@@ -4,17 +4,13 @@ const userModel = require("../models/userModel");
 
 
 
-const Authentication = async (req, res, next) => {
+const auth = async (req, res, next) => {
     try {
         // accessing token from headers
         let token = req.headers.authorization;
-        if (!token) return res.status(400).send({ status: false, message: 'TOKEN is missing !!!' });
-
-        // console.log({ token: token })
+        if (!token) return res.status(403).send({ status: false, message: 'TOKEN is missing !!!' });
 
         let user = token.split(' ');
-
-        // console.log({ token: user })
 
         JWT.verify(
             user[1],
@@ -54,4 +50,4 @@ const Authorization = async (req, res, next) => {
 }
 
 
-module.exports = { Authentication, Authorization };
+module.exports = { auth };
