@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { auth } = require("../middleware/auth")
+const { authUser } = require("../middleware/auth")
 const { createUser, loginUser, getUserProfile, updateUserProfile } = require("../controllers/userController");
 const { createProducts, getProductProfile, getProductsWithFilter, updateProduct, deleteProductDetails } = require("../controllers/productController");
 
@@ -11,8 +11,8 @@ const { createProducts, getProductProfile, getProductsWithFilter, updateProduct,
 
 router.post("/register", createUser);                                                           // >>>>>>>>> user creation (post-api)
 router.post("/login", loginUser);                                                               // >>>>>>>>> user login (post-api)
-router.get("/user/:userId/profile", auth, getUserProfile);                                      // >>>>>>>>> get user profile (get-api)     >> protected route
-router.put("/user/:userId/profile", auth, updateUserProfile);                                   // >>>>>>>>> update user profile (put-api)  >> protected route
+router.get("/user/:userId/profile", authUser, getUserProfile);                                      // >>>>>>>>> get user profile (get-api)     >> protected route
+router.put("/user/:userId/profile", authUser, updateUserProfile);                                   // >>>>>>>>> update user profile (put-api)  >> protected route
 
 
 //---------------------------------------------------------->     - FEATURE - II --- Product Api's      <----------------------------------------------------------//

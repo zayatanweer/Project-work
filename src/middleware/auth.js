@@ -4,7 +4,7 @@ const userModel = require("../models/userModel");
 
 
 
-const auth = async (req, res, next) => {
+const authUser = async (req, res, next) => {
     try {
         // accessing token from headers
         let token = req.headers.authorization;
@@ -50,4 +50,4 @@ const Authorization = async (req, res, next) => {
 }
 
 
-module.exports = { auth };
+module.exports = { authUser };
