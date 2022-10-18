@@ -214,7 +214,7 @@ const updateUserProfile = async (req, res) => {
         if (!findUserData) return res.status(400).send({ status: false, message: `User with userId: ${userIdFromParam} is not exist in database.` });
 
         // authorizing user with token's userId
-        if (userIdFromParam != req.userId) return res.status(403).send({ status: false, message: "Unauthorized user access." });
+        if (userIdFromParam !== req.userId) return res.status(403).send({ status: false, message: "Unauthorized user access." });
 
         //------------------------------------------update address---------------------------------------------------------
 

@@ -10,10 +10,12 @@ const authUser = async (req, res, next) => {
         let token = req.headers.authorization;
         if (!token) return res.status(403).send({ status: false, message: 'TOKEN is missing !!!' });
 
+        // splitting token & string 
         let user = token.split(' ');
 
+        // verifying token
         JWT.verify(
-            user[1],
+            user[1],            // after splitting token will present in 1st index
             " ~ functionUp--project-5--product-management-group-44 ~ ",
             (error, decodedToken) => {
                 if (error) return res.status(400).send({ status: false, message: error.message })

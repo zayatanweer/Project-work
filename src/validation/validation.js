@@ -76,5 +76,4 @@ module.exports = {
   isValidNum,
   isValidStyle,
   isValidBoolean
-
 };
