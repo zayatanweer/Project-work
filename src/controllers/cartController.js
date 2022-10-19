@@ -7,7 +7,7 @@ const { checkEmptyBody, isValid, isValidObjectId } = require('../validation/vali
 
 
 //----------------------create cart---------------------------//
-const createCart = async function (req, res) {
+const createCart = async (req, res) => {
     try {
         let { cartId, productId } = req.body
         let userId = req.params.userId
@@ -159,7 +159,7 @@ const updateCart = async (req, res) => {
 }
 
 //--------------------------------get API---------------------//
-const getCart = async function (req, res) {
+const getCart = async (req, res) => {
     try {
         let userId = req.params.userId
 
@@ -193,7 +193,7 @@ const getCart = async function (req, res) {
 };
 
 //--------------------------------delete API------------------//
-const deleteCart = async function (req, res) {
+const deleteCart = async (req, res) => {
     try {
 
         // Validate params

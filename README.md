@@ -95,7 +95,7 @@
 - Allow an user to login with their email and password.
 - On a successful login attempt return the userId and a JWT token contatining the userId, exp, iat.
 
-> ***NOTE:*** There is a slight change in response body. You should also return userId in addition to the JWT token.
+> *__NOTE:__* There is a slight change in response body. You should also return userId in addition to the JWT token.
 
 - __Response format__
   - ___On success___ - Return HTTP status 200 and JWT token in response body. The response should be a JSON object like [this](#successful-response-structure)
@@ -194,7 +194,7 @@
 Note: [Bcrypt](https://www.npmjs.com/package/bcrypt)
 Send [form-data](https://developer.mozilla.org/en-US/docs/Web/API/FormData)
 
-## FEATTURE II - Product
+## FEATURE II - Product
 
 ### Models
 
@@ -237,7 +237,7 @@ Send [form-data](https://developer.mozilla.org/en-US/docs/Web/API/FormData)
     - Product name (The key for this filter will be 'name'). You should return all the products with name containing the substring received in this filter
     - Price : greater than or less than a specific value. The keys are 'priceGreaterThan' and 'priceLessThan'.
 
-> ***NOTE:*** For price filter request could contain both or any one of the keys. For example the query in the request could look like { priceGreaterThan: 500, priceLessThan: 2000 } or just { priceLessThan: 1000 } )
+> *__NOTE:__* For price filter request could contain both or any one of the keys. For example the query in the request could look like { priceGreaterThan: 500, priceLessThan: 2000 } or just { priceLessThan: 1000 } )
 
 - __Sort__
   - Sorted by product price in ascending or descending. The key value pair will look like {priceSort : 1} or {priceSort : -1}
@@ -514,7 +514,7 @@ Refer below sample
   totalItems: 2,
   totalQuantity: 3,
   cancellable: true,
-  status: 'pending'
+  status: 'pending',
   createdAt: "2021-09-17T04:25:07.803Z",
   updatedAt: "2021-09-17T04:25:07.803Z",
 }

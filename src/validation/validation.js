@@ -38,16 +38,20 @@ const isValidPassword = (password) => { return (/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-
 
 
 //* PRODUCT VALIDATIONS *//
+
+//------------------ title Validation----------------------->>
+const isValidTitle = (title) => { return (/^[a-zA-Z][a-zA-Z0-9 $!-_#@%&\.]+$/.test(title)); }
+
 //------------------ size Validation----------------------->>
 const isValidSize = (sizes) => { return ["S", "XS", "M", "X", "L", "XXL", "XL"].includes(sizes); }
 //------------------ price Validation----------------------->>
-const isValidPrice = (price) => { return (/^[\d]+$/.test(price)); }
+const isValidPrice = (price) => { return (/^[(0-9)+.?(0-9)*]+$/.test(price)); }
 //------------------ installment Validation----------------------->>
 const isValidInstallments = (installments) => { return ((/^[\d]+$/).test(installments)); }
 //------------------ number Validation----------------------->>
 const isValidNum = (num) => { return /^[0-9]*[1-9]+$|^[1-9]+[0-9]*$/.test(num); }
 //------------------ style Validation----------------------->>
-const isValidStyle = (style) => { return /^[a-z A-Z]*$/.test(style); }
+const isValidStyle = (style) => { return /^[a-zA-Z _-]+$/.test(style); }
 //------------------ boolean Validation----------------------->>
 const isValidBoolean = (value) => {
   if (!(typeof value === "boolean")) return false
@@ -70,6 +74,7 @@ module.exports = {
   isValidObjectId,
   isValidName,
   isValidPassword,
+  isValidTitle,
   isValidSize,
   isValidPrice,
   isValidInstallments,

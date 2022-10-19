@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const ObjectId = mongoose.Schema.Types.ObjectId
 
-const orderSchema = new mongoose.Schema({
+const cartSchema = new mongoose.Schema({
     userId: { type: ObjectId, refs: "User", required: true },
 
     items: [{
@@ -19,10 +19,4 @@ const orderSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-module.exports = mongoose.model('Order', orderSchema);
-
-// status: { type: String, enum: ["pending", "completed", "canceled"], default: 'pending' },
-
-// totalQuantity: { type: Number, required: true },
-
-// cancellable: { type: Boolean, default: true },
+module.exports = mongoose.model('Cart', cartSchema);
