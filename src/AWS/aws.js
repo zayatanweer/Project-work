@@ -9,29 +9,28 @@ aws.config.update({
 
 
 let uploadFile = async (file) => {
-    
+    // this function will upload file to aws and return the link
     return new Promise(function (resolve, reject) {
 
-        // this function will upload file to aws and return the link
-        let s3 = new aws.S3({ apiVersion: '2006-03-01' });              // we will be using the s3 service of aws
+        // create S3 service object
+        let s3 = new aws.S3({ apiVersion: '2006-03-01' });                              // we will be using the s3 service of aws
 
-        var uploadParams = {
-            ACL: "public-read",
-            Bucket: "classroom-training-bucket",  
-            Key: "plutonium/project-5/productManagement-GR:44/" + file.originalname, 
-            Body: file.buffer
+        const uploadParams = {
+            ACL: "public-read",                                                         // this file is accessible publicly.. giving permission
+            Bucket: "classroom-training-bucket",                                        // it's our main folder name in aws bucket
+            Key: "plutonium/project-5/productManagement-GR:44/" + file.originalname,    // subfolders or path where we place our file                                                         
+            Body: file.buffer                                                           // file.originalname >>   will save with the exact file name at the uploading time what we are giving
         }
 
-
-        s3.upload(uploadParams, function (err, data) {
+        s3.upload( uploadParams, function (err, data) {
             if (err) {
                 return reject({ "error": err })
             }
-            console.log(data)
-            console.log("file uploaded successfully")
+            console.log(data);
+            console.log(`file uploaded successfully : ${data.location}`);
             return resolve(data.Location)
-        })
-    })
+        });
+    });
 }
 
 

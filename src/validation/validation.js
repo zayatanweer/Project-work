@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 
 
-//===================== Checking that there is something as Input =====================//
-const checkEmptyBody = (obj) => { return Object.keys(obj).length > 0 }
+//===================== >>>>>>>>     Some globally used function       <<<<<<<<<<< =====================//
+
+
+const checkEmptyBody = (object) => { return Object.keys(object).length > 0 }            // >>>> to check that object has keys or not 
 
 
 //===================== Validating that the Input must be a non-empty String =====================//
@@ -12,6 +14,14 @@ const isValid = function (value) {
   return true;
 };
 
+//===================== Validation for image =====================//
+// const validImage = function (image) {
+//   return /(\.jpg|\.jpeg|\.bmp|\.gif|\.png)$/.test(image)
+// }
+const isValidImageLink = (imageUrlLink) => {
+  const urlRegex = /(http[s]:\/\/)([a-z\-0-9\/.]+)\.([a-z.]{2,3})\/([a-z0-9\-\/._~:?#\[\]@!$&'()+,;=%]*)([a-z0-9]+\.)(jpg|jpeg|png|bmp|gif)/i;
+  return urlRegex.test(imageUrlLink);
+};
 //<<----------------Validation for Email --------------------->>
 const isValidEmail = function (email) {
   return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email);
@@ -21,7 +31,7 @@ const isValidEmail = function (email) {
 const isValidObjectId = (objectId) => { return mongoose.Types.ObjectId.isValid(objectId); };
 
 const streetValidation = function (street) {
-  const streetRegex = /^[a-z \, A-Z \d]+$/;       // check regex
+  const streetRegex = /^[a-zA-Z0-9 -\.]+$/                   ///^[a-z \, A-Z \d]+$/;       // check regex
   return streetRegex.test(street);
 };
 
@@ -66,6 +76,7 @@ const isValidBoolean = (value) => {
 module.exports = {
   checkEmptyBody,
   isValid,
+  isValidImageLink,
   pinCodeValidation,
   cityValidation,
   streetValidation,

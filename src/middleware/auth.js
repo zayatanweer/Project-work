@@ -27,29 +27,4 @@ const authUser = async (req, res, next) => {
     }
 }
 
-
-// const Authorization = async (req, res, next) => {
-//     try {
-//         // taking userId from params
-//         let userId = req.params.userId
-//
-//         // validating id
-//         if (!isValidObjectId(userId)) return res.status(400).send({ status: false, message: "User id not valid" });
-//
-//         // finding user in DB
-//         let checkUser = await userModel.findById(userId)
-//         if (!checkUser) return res.status(404).send({ status: false, message: "User not found" })
-//
-//         // authorizing the user
-//         if (userId != req.userId) return res.status(403).send({ status: false, message: "user not authorized" })
-//
-//         // sending whole user document to global
-//         req.checkUser = checkUser;
-//         next();
-//     } catch (error) {
-//         return res.status(500).send({ status: false, message: error.message })
-//     }
-// }
-
-
 module.exports = { authUser };
