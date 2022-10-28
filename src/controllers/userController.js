@@ -1,6 +1,6 @@
 //===================== Importing module and packages =====================//
-const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const userModel = require("../models/userModel");
 
 const { uploadFile } = require("../AWS/aws");                   // aws
@@ -65,8 +65,8 @@ const registerUser = async (req, res) => {
             if (!shipping) return res.status(400).send({ status: false, message: "please enter shipping address and it should be in object format." });
             if (!checkEmptyBody(shipping)) return res.status(400).send({ status: false, message: "shipping address should not be empty" });
 
-            // if (!billing) return res.status(400).send({ status: false, message: "Please enter Billing address and it should be in object format." });
-            // if (!checkEmptyBody(billing)) return res.status(400).send({ status: false, message: "billing address should not be empty" });
+            if (!billing) return res.status(400).send({ status: false, message: "Please enter Billing address and it should be in object format." });
+            if (!checkEmptyBody(billing)) return res.status(400).send({ status: false, message: "billing address should not be empty" });
 
             // if shipping and billing address are available
             if (shipping) {
@@ -85,11 +85,7 @@ const registerUser = async (req, res) => {
                 if (!pinCodeValidation(pincode)) return res.status(400).send({ status: false, message: "provide a valid pincode" });
             }
 
-            if (!billing) {
-                fullAddress.billing.street = fullAddress.shipping.street;
-                fullAddress.billing.city = fullAddress.shipping.city;
-                fullAddress.billing.pincode = fullAddress.shipping.pincode;
-            } else {
+            if (billing) {
 
                 if (typeof billing != "object") return res.status(400).send({ status: false, message: "Billing Address is in wrong format required in object format" });
 
@@ -105,23 +101,7 @@ const registerUser = async (req, res) => {
                 if (!isValid(pincode)) return res.status(400).send({ status: false, message: "Enter Billing Pincode" });
                 if (!pinCodeValidation(pincode)) return res.status(400).send({ status: false, message: "provide a valid pincode" });
             }
-            // if (billing) {
 
-            //     if (typeof shipping != "object") return res.status(400).send({ status: false, message: "Billing Address is in wrong format required in object format" });
-
-            //     let { street, city, pincode } = billing;
-
-            //     if (!isValid(street)) return res.status(400).send({ status: false, message: "Please Enter Billing street Name" })
-            //     if (!streetValidation(street)) return res.status(400).send({ status: false, message: "provide a valid Billing Street Name" })
-
-            //     if (!isValid(city)) return res.status(400).send({ status: false, message: "Please enter Billing City Name" })
-            //     if (!cityValidation(city.trim())) return res.status(400).send({ status: false, message: "provide a Billing City Name" })
-
-
-            //     if (!isValid(pincode)) return res.status(400).send({ status: false, message: "Enter Billing Pincode" })
-            //     if (!pinCodeValidation(pincode)) return res.status(400).send({ status: false, message: "provide a valid pincode" })
-            // }
-            // if all validations checked successfully assigning parsed address(object) to body
             requestBody.address = fullAddress;
         }
 
@@ -129,7 +109,7 @@ const registerUser = async (req, res) => {
         if (!isValid(password)) return res.status(400).send({ status: false, message: "password is required" });
         if (!isValidPassword(password)) return res.status(400).send({ status: false, message: `provided password: (${password}). is not valid (required at least: 8-15 characters with at least one capital letter, one special character & one number)` });
 
-        body.password = await encryptPassword(password);         // assigning encrypted password to body
+        requestBody.password = await encryptPassword(password);         // assigning encrypted password to body
 
         // validating email & phone
         if (!isValid(email)) return res.status(400).send({ status: false, message: "email is required" });
@@ -147,12 +127,14 @@ const registerUser = async (req, res) => {
 
         // checking that profile image is present and validating.. then assigning to body
         if (!files || files.length == 0) return res.status(400).send({ status: false, message: "please provide image for profileImage" });
+
         const image = await uploadFile(files[0]);
+
         if (!isValidImageLink(image)) return res.status(400).send({ status: false, msg: "profileImage is in incorrect format required format must be between: .jpg / .jpeg / .png / .bmp / .gif " });
-        body.profileImage = image;
+        requestBody.profileImage = image;
 
         // creating new user
-        const createdUser = await userModel.create(body);
+        const createdUser = await userModel.create(requestBody);
         return res.status(201).send({ status: true, message: "User created successfully", data: createdUser });
     }
     catch (error) {
@@ -186,7 +168,7 @@ const loginUser = async (req, res) => {
 
         // checking password with bcrypt's compare
         let ValidPassword = await bcrypt.compare(password, findUserData.password);
-        if (!ValidPassword) return res.status(404).send({ status: false, message: `incorrect password: ${password}. please check the password and try again !! ` });
+        if (!ValidPassword) return res.status(404).send({ status: false, message: `incorrect password given for the account name : ${findUserData.fname} ${findUserData.lname}. please check the password and try again !! ` });
 
         // creating payload separately
         let payLoad = {
@@ -276,6 +258,7 @@ const updateUserProfile = async (req, res) => {
             lname = lname.trim();
 
             if (!isValidName(lname)) return res.status(400).send({ status: false, message: `lname: ${lname}, is Not valid` });
+
             findUserData.lname = lname;
         }
 
@@ -285,7 +268,7 @@ const updateUserProfile = async (req, res) => {
             if (!isValidEmail(email)) return res.status(400).send({ status: false, message: `email: ${email}, is not valid` });
 
             const existEmail = await userModel.findOne({ email: email });
-            if (existEmail) return res.status(400).send({ status: false, message: `email: ${email} is already stored in Database , please provide unique email id.` });
+            if (existEmail) return res.status(409).send({ status: false, message: `email: ${email} is already stored in Database , please provide unique email id.` });
 
             findUserData.email = email;
         }
@@ -296,7 +279,7 @@ const updateUserProfile = async (req, res) => {
             if (!isValidPhone(phone)) return res.status(400).send({ status: false, message: `phone: ${phone}, is not valid.` });
 
             let existPhone = await userModel.findOne({ phone: phone });
-            if (existPhone) return res.status(400).send({ status: false, message: `phone: ${phone} is already stored in Database, please provide unique phone no.` });
+            if (existPhone) return res.status(409).send({ status: false, message: `phone: ${phone} is already stored in Database, please provide unique phone no.` });
 
             findUserData.phone = phone;
         }
@@ -384,10 +367,10 @@ const updateUserProfile = async (req, res) => {
         }
 
         // checking profileImage
-        if (profileImage) return res.status(400).send({ status: false, message: "ProfileImage format invalid!!" });
+        if (profileImage) return res.status(400).send({ status: false, message: "ProfileImage format invalid !!" });
 
         if (files && files.length > 0) {
-            const image = await uploadFile(image[0]);
+            const image = await uploadFile(files[0]);
             if (!isValidImageLink(image)) return res.status(400).send({ status: false, msg: "profileImage is in incorrect format required format must be between: .jpg / .jpeg / .png / .bmp / .gif " });
             findUserData.profileImage = image;
         }

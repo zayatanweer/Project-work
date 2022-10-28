@@ -1,6 +1,4 @@
 const JWT = require('jsonwebtoken');
-const { isValidObjectId } = require('../validation/validation')
-const userModel = require("../models/userModel");
 
 
 
@@ -20,7 +18,7 @@ const authUser = async (req, res, next) => {
             (error, decodedToken) => {
                 if (error) return res.status(400).send({ status: false, message: error.message })
                 req.userId = decodedToken.userId
-                next()
+                next();
             });
     } catch (error) {
         return res.status(500).send({ status: false, message: error.message })

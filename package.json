@@ -1,22 +1,23 @@
 {
-  "name": "product management",
+  "name": "Product Management",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "a backend development project over product management, like any e-commerce web application",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/index.js"
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sabihak89/plutonium.git"
+    "url": "https://github.com/coderSidd03/project-5-product-Management.git"
   },
-  "author": "rahul, priyanka, soumyadeep, tanweer",
+  "author": "soumyadeep chakraborty",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/sabihak89/plutonium/issues"
+    "url": "https://github.com/coderSidd03/project-5-product-Management.git/issues"
   },
-  "homepage": "https://github.com/sabihak89/plutonium#readme",
+  "homepage": "https://github.com/coderSidd03/project-5-product-Management.git#readme",
   "dependencies": {
     "aws-sdk": "^2.1231.0",
     "bcrypt": "^5.1.0",

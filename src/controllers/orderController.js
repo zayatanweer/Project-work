@@ -1,16 +1,21 @@
+//===================== Importing module and packages =====================//
 const orderModel = require('../models/orderModel')
 const userModel = require('../models/userModel')
 const cartModel = require('../models/cartModel')
 
-const { checkEmptyBody, isValid, isValidObjectId } = require("../validation/validation");
+const { checkEmptyBody, isValid, isValidObjectId } = require("../validation/validation");           // destructuring validations functions
 
 
+
+//------------------------------------------------------------>     Order Api's      <------------------------------------------------------------------//
+
+//============================================ create Order ===============================================<<< /users/:userId/orders >>> //
 const createOrder = async function (req, res) {
     try {
         let userId = req.params.userId;         // accessing userId from params 
-        userId = userId.trim();
         let bodyData = req.body;                // accessing details from request body
 
+        userId = userId.trim();
         // validating userId
         if (!isValidObjectId(userId)) return res.status(400).send({ status: false, message: `userId: ${userId} is invalid.` });
 
@@ -19,7 +24,7 @@ const createOrder = async function (req, res) {
         if (!isPresentUser) return res.status(404).send({ status: false, message: `user is not exist, by the given userId: ${userId}` });
 
         // Authorizing user
-        if (userId !== req.userId) return res.status(403).send({ status: false, msg: 'unauthorized User access !!' });
+        if (userId != req.userId) return res.status(403).send({ status: false, msg: 'unauthorized User access !!' });
 
 
         if (!checkEmptyBody(bodyData)) return res.status(400).send({ status: false, message: "request body cant be empty" });
@@ -76,15 +81,18 @@ const createOrder = async function (req, res) {
     }
 }
 
+
+//============================================ update Order ===============================================<<< /users/:userId/orders >>> //
 const updateOrder = async function (req, res) {
     try {
 
 
-        let userId = req.params.userId.trim();              // taking userId from path param
+        let userId = req.params.userId;              // taking userId from path param
         let body = req.body;                                // accessing details from request body
 
         // validating userId
         if (!isValidObjectId(userId)) return res.status(400).send({ status: false, message: `userId: ${userId} is invalid.` });
+        userId = userId.trim();     // added
 
         // fetching userData from DB
         const isPresent = await userModel.findById(userId);
@@ -94,7 +102,7 @@ const updateOrder = async function (req, res) {
         if (userId !== req.userId) return res.status(403).send({ status: false, msg: 'unauthorized User access !!' });
 
 
-        if (!checkEmptyBody(body)) return res.status(400).send({ status: false, message: "empty body ..." });
+        if (!checkEmptyBody(body)) return res.status(400).send({ status: false, message: "empty body found..." });
 
 
 
@@ -141,6 +149,8 @@ const updateOrder = async function (req, res) {
 }
 
 
+
+//===================== Exporting functions to use globally =====================//
 module.exports = { createOrder, updateOrder }
 
 

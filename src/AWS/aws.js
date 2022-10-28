@@ -9,6 +9,7 @@ aws.config.update({
 
 
 let uploadFile = async (file) => {
+
     // this function will upload file to aws and return the link
     return new Promise(function (resolve, reject) {
 
@@ -22,7 +23,7 @@ let uploadFile = async (file) => {
             Body: file.buffer                                                           // file.originalname >>   will save with the exact file name at the uploading time what we are giving
         }
 
-        s3.upload( uploadParams, function (err, data) {
+        s3.upload(uploadParams, function (err, data) {
             if (err) {
                 return reject({ "error": err })
             }

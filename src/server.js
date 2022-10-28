@@ -1,3 +1,4 @@
+//===================== Importing module and packages =====================//
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -8,15 +9,16 @@ const route = require("./routes/route");
 
 const app = express();
 
-app.use(express.json());
-app.use(cors());
-app.use(multer().any());
+app.use(express.json());      // checking content-type and parsing in json
+app.use(cors());              // to not violate cors policy
+app.use(multer().any());      // to access files
 
 
+//===================== Connecting Mongo DB database cluster =====================//
 mongoose.connect("mongodb+srv://rahul:rahul123@cluster0.ghayzlv.mongodb.net/group-44?retryWrites=true&w=majority", {
   useNewUrlParser: true
 })
-  .then(() => console.log("mongoDb is connected"))
+  .then(() => console.log(">> mongoDb is connected..."))
   .catch(err => console.log(err))
 
 
@@ -32,4 +34,5 @@ app.use(
 //===================== Global Middleware for All Route =====================//
 app.use('/', route);
 
-app.listen(PORT, () => { console.log(`express app running on port ${PORT}`) });
+
+app.listen(PORT, () => { console.log(`>> express app running on port ${PORT}...`) });
